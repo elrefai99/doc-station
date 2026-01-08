@@ -3,7 +3,18 @@
   "version": "0.1.1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "dev": "concurrently \"NODE_ENV=development nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
+    "dev:windows": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
+    "build": "tsc",
+    "start": "concurrently \"node ./dist/app.js\" \"node ./dist/Queue/worker.js\"",
+    "test": "jest --detectOpenHandles --runInBand",
+    "test:local": "NODE_ENV=development jest",
+    "taze:local": "npx taze -r",
+    "taze:back": "npx taze major",
+    "taze:update": "npx taze major -w",
+    "taze:patch": "npx taze patch",
+    "compress:ubuntu": "sudo zip -r project.zip ."
   },
   "keywords": [],
   "author": "",
@@ -51,6 +62,7 @@
     "bullmq": "^5.66.4",
     "node-cron": "^4.2.1",
     "nodemon": "^3.1.11",
+    "prisma": "^7.2.0",
     "redis": "^5.10.0",
     "socket.io": "^4.8.3",
     "ts-node": "^10.9.2",
