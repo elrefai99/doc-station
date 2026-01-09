@@ -1,8 +1,18 @@
-import appConfig from './app.config';
 import './config/dotenv.conf'
 import express, { Request, Response } from 'express';
+import appConfig from './app.config';
+import * as http from 'http'
+import { Server as SocketIOServer } from 'socket.io'
 
 const app = express()
+const server = http.createServer(app)
+export let ioSocket: SocketIOServer;
+
+ioSocket = new SocketIOServer(server, {
+     cors: {
+          origin: '*',
+     },
+})
 
 appConfig(app)
 
@@ -11,6 +21,6 @@ app.use(async (_req: Request, res: Response) => {
 })
 
 const PORT = process.env.PORT || 9999;
-app.listen(PORT as string, () => {
+server.listen(PORT as string, () => {
      console.log("🌐 Server is running on:", process.env.NODE_ENV === "development" ? String(process.env.SITE_API_Local_URL) : String(process.env.SITE_API_URL))
 })

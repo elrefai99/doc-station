@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,23 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 
-// Define enums
-enum UserRole {
-  ADMIN
-  PATIENT
-  DOCTOR
-}
-
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  VERIFIED
-  BANNED
-  SUSPENDED
-  DELETED
-  ARCHIVED
-}
-
+// Project specific models
 model User {
   id             Int        @id @default(autoincrement())
   fullname       String     @db.VarChar(255)
@@ -56,8 +34,64 @@ model User {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
-  @@index([role])
   @@index([status])
-  @@index([isActive])
   @@index([createdAt])
+}
+
+model Gallery {
+  id        Int       @id @default(autoincrement())
+  url       String
+  productId Int?
+  product   Products? @relation(fields: [productId], references: [id])
+}
+
+model Brands {
+  id       Int        @id @default(autoincrement())
+  title    String     @db.VarChar(255)
+  products Products[]
+}
+
+model Products {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar(255)
+  slug        String  @unique @db.VarChar(255)
+  description String  @db.Text
+  content     String  @db.Text
+  price       Decimal @db.Decimal(10, 2)
+
+  brandId Int
+  brand   Brands @relation(fields: [brandId], references: [id])
+
+  image     Gallery[]
+  tags      String[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Blogs {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  description String   @db.Text
+  content     String   @db.Text
+  image       String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Project specific enums
+enum UserRole {
+  ADMIN
+  PATIENT
+  DOCTOR
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  VERIFIED
+  BANNED
+  SUSPENDED
+  DELETED
+  ARCHIVED
 }
