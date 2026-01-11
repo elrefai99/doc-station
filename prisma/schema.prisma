@@ -7,23 +7,20 @@ datasource db {
   provider = "postgresql"
 }
 
-// Project specific models
 model User {
   id              Int        @id @default(autoincrement())
   fullname        String     @db.VarChar(255)
-  email           String     @db.VarChar(255)
-  password        String     @db.VarChar(255)
   username        String     @unique @db.VarChar(255)
+  email           String     @db.VarChar(255)
+  code            String     @default("") @db.VarChar(255)
+  phone           String     @default("") @db.VarChar(255)
+  address         String     @default("") @db.VarChar(255)
+  city            String     @default("") @db.VarChar(255)
+  state           String     @default("") @db.VarChar(255)
+  zip             String     @default("") @db.VarChar(255)
+  password        String     @db.VarChar(255)
   role            UserRole   @default(PATIENT)
   status          UserStatus @default(ACTIVE)
-  avatar          String     @db.VarChar(255)
-  Bio             String     @db.VarChar(255)
-  code            String     @db.VarChar(255)
-  phone           String     @unique @db.VarChar(255)
-  address         String     @db.VarChar(255)
-  city            String     @db.VarChar(255)
-  state           String     @db.VarChar(255)
-  zip             String     @db.VarChar(255)
   isVerified      Boolean    @default(false)
   isActive        Boolean    @default(true)
   isDeleted       Boolean    @default(false)
@@ -36,9 +33,11 @@ model User {
   updatePAssword  DateTime   @default(now())
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
-  otps            OTP[]
-  patientBookings Booking[]  @relation("PatientBookings")
+  avatar          String     @default("") @db.VarChar(255)
+  Bio             String     @default("") @db.VarChar(255)
   doctorBookings  Booking[]  @relation("DoctorBookings")
+  patientBookings Booking[]  @relation("PatientBookings")
+  otps            OTP[]
 
   @@index([status])
   @@index([email])
@@ -68,28 +67,26 @@ model Brands {
 }
 
 model Products {
-  id          Int     @id @default(autoincrement())
-  title       String  @db.VarChar(255)
-  slug        String  @unique @db.VarChar(255)
-  description String  @db.Text
-  content     String  @db.Text
-  price       Decimal @db.Decimal(10, 2)
-
-  brandId Int
-  brand   Brands @relation(fields: [brandId], references: [id])
-
-  image     Gallery[]
-  tags      String[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  slug        String    @unique @db.VarChar(255)
+  description String
+  content     String
+  price       Decimal   @db.Decimal(10, 2)
+  brandId     Int
+  tags        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  image       Gallery[]
+  brand       Brands    @relation(fields: [brandId], references: [id])
 }
 
 model Blogs {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(255)
   slug        String   @unique @db.VarChar(255)
-  description String   @db.Text
-  content     String   @db.Text
+  description String
+  content     String
   image       String   @db.VarChar(255)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -100,12 +97,10 @@ model Booking {
   patientId Int?
   dockerId  Int?
   date      String @db.VarChar(255)
-
-  patient User? @relation("PatientBookings", fields: [patientId], references: [id])
-  doctor  User? @relation("DoctorBookings", fields: [dockerId], references: [id])
+  doctor    User?  @relation("DoctorBookings", fields: [dockerId], references: [id])
+  patient   User?  @relation("PatientBookings", fields: [patientId], references: [id])
 }
 
-// Project specific enums
 enum UserRole {
   ADMIN
   PATIENT

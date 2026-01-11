@@ -5,23 +5,16 @@ import ServerError from "../../../utils/api.errors.utils";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response) => {
-          const { fullname, email, username, password } = req.body;
-          const user = await prisma.user.findUnique({
+          const { email, } = req.body;
+          const user = await prisma.user.findFirst({
                where: {
-                    email
+                    email: email as string
                }
           })
           if (user) {
                throw new ServerError("User already exists", 400);
           }
-          const newUser = await prisma.user.create({
-               data: {
-                    fullname,
-                    email,
-                    username,
-                    password
-               }
-          })
-          res.status(201).json(newUser);
+
+          res.status(201).json(user);
      }
 )
