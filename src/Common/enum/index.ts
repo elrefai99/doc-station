@@ -13,3 +13,10 @@ export enum UserStatus {
      deleted = "DELETED",
      archived = "ARCHIVED"
 }
+
+export enum OTPStatus {
+     pending = "PENDING",
+     verified = "VERIFIED",
+     expired = "EXPIRED",
+     failed = "FAILED"
+}
