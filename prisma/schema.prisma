@@ -46,11 +46,12 @@ model User {
 }
 
 model OTP {
-  id     Int    @id @default(autoincrement())
+  id     Int       @id @default(autoincrement())
   userId Int?
-  otp    String @db.VarChar(255)
-  expire String @db.VarChar(255)
-  user   User?  @relation(fields: [userId], references: [id])
+  otp    Int
+  expire String    @db.VarChar(255)
+  status OTPStatus @default(PENDING)
+  user   User?     @relation(fields: [userId], references: [id])
 }
 
 model Gallery {
@@ -115,4 +116,11 @@ enum UserStatus {
   SUSPENDED
   DELETED
   ARCHIVED
+}
+
+enum OTPStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+  FAILED
 }
