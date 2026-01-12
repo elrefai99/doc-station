@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   app:
-    container_name: egystay-backend-live
+    container_name: doc-station-backend-live
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,7 +15,10 @@ services:
       - redis
     restart: always
     networks:
-      - egystay_network
+      - doc-station_network
+    volumes:
+      - .:/app
+      - /app/node_modules
 
   redis:
     image: redis:7-alpine
@@ -24,11 +27,11 @@ services:
       - redis_data:/data
     restart: always
     networks:
-      - egystay_network
+      - doc-station_network
 
   nginx:
     image: nginx:alpine
-    container_name: egystay-nginx
+    container_name: doc-station-nginx
     ports:
       - "80:80"
     volumes:
@@ -37,11 +40,11 @@ services:
       - app
     restart: always
     networks:
-      - egystay_network
+      - doc-station_network
 
 volumes:
   redis_data:
 
 networks:
-  egystay_network:
+  doc-station_network:
     driver: bridge
