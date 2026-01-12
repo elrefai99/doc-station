@@ -4,10 +4,11 @@ import prisma from "../../../config/prisma";
 import ServerError from "../../../utils/api.errors.utils";
 import bcrypt from "bcrypt";
 import { pending_token } from "../../../utils/JWT/pending.account.jwt";
+import { registerDto } from "../DTO/index.dto";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
-          const { email, fullname, password } = req.body
+          const { email, fullname, password, code, phone } = req.body as registerDto
 
           const cUser = await prisma.user.findFirst({
                where: {
@@ -29,6 +30,8 @@ export const registerController = asyncHandler(
                     email,
                     fullname,
                     username,
+                    code,
+                    phone,
                     password: hashedPassword,
                }
           })

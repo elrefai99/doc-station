@@ -4,10 +4,11 @@ import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { access_token, refresh_token } from "../../../utils/JWT/active.accounts.jwt";
+import { loginDto } from "../DTO/index.dto";
 
 export const loginController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
-          const { email, password } = req.body;
+          const { email, password } = req.body as loginDto
 
           const cUser = await prisma.user.findFirst({
                where: {

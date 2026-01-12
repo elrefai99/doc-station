@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import appConfig from './app.config';
 import * as http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
+import { setupSwagger } from './swagger';
 
 const app = express()
 const server = http.createServer(app)
@@ -15,6 +16,7 @@ ioSocket = new SocketIOServer(server, {
 })
 
 appConfig(app)
+setupSwagger(app);
 
 app.use(async (_req: Request, res: Response) => {
      res.status(404).send('This is not the API route you are looking for')
