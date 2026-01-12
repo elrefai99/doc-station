@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "dev": "concurrently \"NODE_ENV=development nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
+    "dev": "concurrently \"NODE_ENV=development nodemon -L\"",
     "dev:windows": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
     "dev:noWorker": "nodemon",
     "build": "tsc",
@@ -22,6 +22,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
@@ -37,12 +38,15 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
-    "uuid": "^13.0.0"
+    "pg": "^8.16.3",
+    "uuid": "^13.0.0",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.965.0",
     "@mohamed-elrefai/tsconfigs": "^1.0.2",
     "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^7.2.0",
     "@prisma/extension-accelerate": "^3.0.1",
     "@types/axios": "^0.14.4",
     "@types/bcrypt": "^6.0.0",
@@ -59,9 +63,11 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.0.3",
+    "@types/pg": "^8.16.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^11.0.0",
+    "@types/ws": "^8.18.1",
     "bullmq": "^5.66.4",
     "node-cron": "^4.2.1",
     "nodemon": "^3.1.11",

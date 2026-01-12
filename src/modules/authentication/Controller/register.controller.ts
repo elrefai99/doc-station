@@ -15,6 +15,15 @@ export const registerController = asyncHandler(
                throw new ServerError("User already exists", 400);
           }
 
-          res.status(201).json(user);
+          const newUser = await prisma.user.create({
+               data: {
+                    email,
+                    fullname: "dada",
+                    username: "dada",
+                    password: "dada",
+               }
+          })
+
+          res.status(201).json({ user, newUser });
      }
 )

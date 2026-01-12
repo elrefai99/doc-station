@@ -46,8 +46,6 @@ export default (app: Application) => {
           max: 100
      }))
 
-     app.set("trust proxy", true);
-
      app.use(async (req: Request, _, next: NextFunction) => {
           // get langouage of headers
           req.lang = (req.headers['accept-language'] === 'ar' || req.headers['accept-language'] === 'en') ? req.headers['accept-language'] : 'en' as string
