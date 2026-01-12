@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "dev": "concurrently \"NODE_ENV=development nodemon -L\"",
+    "dev": "concurrently \"NODE_ENV=development nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
     "dev:windows": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
     "dev:noWorker": "nodemon",
     "build": "tsc",
