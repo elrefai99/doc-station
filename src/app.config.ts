@@ -5,6 +5,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cookieParser from "cookie-parser";
+import appModule from "./app.module";
 
 export default (app: Application) => {
      const allowedOrigins: string[] = [
@@ -45,8 +46,6 @@ export default (app: Application) => {
           max: 100
      }))
 
-     app.set("trust proxy", true);
-
      app.use(async (req: Request, _, next: NextFunction) => {
           // get langouage of headers
           req.lang = (req.headers['accept-language'] === 'ar' || req.headers['accept-language'] === 'en') ? req.headers['accept-language'] : 'en' as string
@@ -57,4 +56,5 @@ export default (app: Application) => {
           }
           next();
      });
+     appModule(app);
 }

@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -7,35 +7,50 @@ datasource db {
   provider = "postgresql"
 }
 
-// Project specific models
 model User {
-  id             Int        @id @default(autoincrement())
-  fullname       String     @db.VarChar(255)
-  email          String     @unique @db.VarChar(255)
-  code           String     @db.VarChar(255)
-  phone          String     @unique @db.VarChar(255)
-  address        String     @db.VarChar(255)
-  city           String     @db.VarChar(255)
-  state          String     @db.VarChar(255)
-  zip            String     @db.VarChar(255)
-  password       String     @db.VarChar(255)
-  role           UserRole   @default(PATIENT)
-  status         UserStatus @default(ACTIVE)
-  isVerified     Boolean    @default(false)
-  isActive       Boolean    @default(true)
-  isDeleted      Boolean    @default(false)
-  isArchived     Boolean    @default(false)
-  isSuspended    Boolean    @default(false)
-  isLocked       Boolean    @default(false)
-  isExpired      Boolean    @default(false)
-  isExpiring     Boolean    @default(false)
-  isExpiredSoon  Boolean    @default(false)
-  updatePAssword DateTime   @default(now())
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id              Int        @id @default(autoincrement())
+  fullname        String     @db.VarChar(255)
+  username        String     @unique @db.VarChar(255)
+  email           String     @db.VarChar(255)
+  password        String     @db.VarChar(255)
+  code            String     @default("") @db.VarChar(255)
+  phone           String     @default("") @db.VarChar(255)
+  address         String     @default("") @db.VarChar(255)
+  city            String     @default("") @db.VarChar(255)
+  state           String     @default("") @db.VarChar(255)
+  zip             String     @default("") @db.VarChar(255)
+  role            UserRole   @default(PATIENT)
+  status          UserStatus @default(ACTIVE)
+  isVerified      Boolean    @default(false)
+  isActive        Boolean    @default(true)
+  isDeleted       Boolean    @default(false)
+  isArchived      Boolean    @default(false)
+  isSuspended     Boolean    @default(false)
+  isLocked        Boolean    @default(false)
+  isExpired       Boolean    @default(false)
+  isExpiring      Boolean    @default(false)
+  isExpiredSoon   Boolean    @default(false)
+  updatePAssword  DateTime   @default(now())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  avatar          String     @default("") @db.VarChar(255)
+  Bio             String     @default("") @db.VarChar(255)
+  doctorBookings  Booking[]  @relation("DoctorBookings")
+  patientBookings Booking[]  @relation("PatientBookings")
+  otps            OTP[]
 
   @@index([status])
+  @@index([email])
+  @@index([role])
   @@index([createdAt])
+}
+
+model OTP {
+  id     Int    @id @default(autoincrement())
+  userId Int?
+  otp    String @db.VarChar(255)
+  expire String @db.VarChar(255)
+  user   User?  @relation(fields: [userId], references: [id])
 }
 
 model Gallery {
@@ -52,34 +67,40 @@ model Brands {
 }
 
 model Products {
-  id          Int     @id @default(autoincrement())
-  title       String  @db.VarChar(255)
-  slug        String  @unique @db.VarChar(255)
-  description String  @db.Text
-  content     String  @db.Text
-  price       Decimal @db.Decimal(10, 2)
-
-  brandId Int
-  brand   Brands @relation(fields: [brandId], references: [id])
-
-  image     Gallery[]
-  tags      String[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  slug        String    @unique @db.VarChar(255)
+  description String
+  content     String
+  price       Decimal   @db.Decimal(10, 2)
+  brandId     Int
+  tags        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  image       Gallery[]
+  brand       Brands    @relation(fields: [brandId], references: [id])
 }
 
 model Blogs {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(255)
   slug        String   @unique @db.VarChar(255)
-  description String   @db.Text
-  content     String   @db.Text
+  description String
+  content     String
   image       String   @db.VarChar(255)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-// Project specific enums
+model Booking {
+  id        Int    @id @unique @default(autoincrement())
+  patientId Int?
+  dockerId  Int?
+  date      String @db.VarChar(255)
+  doctor    User?  @relation("DoctorBookings", fields: [dockerId], references: [id])
+  patient   User?  @relation("PatientBookings", fields: [patientId], references: [id])
+}
+
 enum UserRole {
   ADMIN
   PATIENT
