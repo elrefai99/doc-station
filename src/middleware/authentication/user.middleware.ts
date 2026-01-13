@@ -3,8 +3,9 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../../config/prisma";
 import { UserStatus } from "../../generated/prisma";
+import { cacheService } from "../../Common/shared/Redis/cache.service.fun";
 
-export const activeMiddleware = asyncHandler(
+export const userMiddleware = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
           const tokenFromAuthHeader = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
@@ -22,14 +23,17 @@ export const activeMiddleware = asyncHandler(
                          res.status(403).json({ code: 403, status: "Forbidden", message: "This token has expired. Please request a new one", });
                          return;
                     }
+                    const redis = new cacheService()
+                    const userCache = await redis.getData(`user:${decoded.id}`)
+                    if (userCache) {
+                         res.status(200).json({ code: 200, status: "OK", data: userCache })
+                         return;
+                    }
                     const user = await prisma.user.findFirst({
                          where: {
                               id: Number(decoded.id),
                               status: UserStatus.ACTIVE
                          },
-                         select: {
-                              id: true,
-                         }
                     })
                     if (user) {
                          req.user = user;

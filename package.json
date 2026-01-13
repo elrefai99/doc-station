@@ -8,7 +8,7 @@
     "dev:windows": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
     "visualize": "hviz --type prisma --schema prisma/schema.prisma --port 4000",
     "build": "tsc",
-    "start": "concurrently \"node ./dist/app.js\" \"node ./dist/Queue/worker.js\"",
+    "start": "concurrently \"node ./dist/src/app.js\" \"node ./dist/src/Queue/worker.js\"",
     "test": "jest --detectOpenHandles --runInBand",
     "test:local": "NODE_ENV=development jest",
     "taze:local": "npx taze -r",
@@ -40,6 +40,7 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "pg": "^8.16.3",
+    "sharp": "^0.34.5",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^13.0.0",
     "ws": "^8.19.0"
