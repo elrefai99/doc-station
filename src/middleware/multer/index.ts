@@ -52,3 +52,14 @@ export const uploadAvatar: any = multer({
           fileSize: 75 * 1024 * 1024,
      },
 }).single("img")
+
+export const medical_historyImage: any = multer({
+     storage: multerStorage,
+     limits: {
+          fileSize: 75 * 1024 * 1024,
+     },
+}).fields([
+     {
+          name: 'images',
+     },
+])

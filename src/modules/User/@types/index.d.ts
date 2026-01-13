@@ -31,3 +31,16 @@ export interface IUser {
      patientBookings?: string;
      otps?: string;
 }
+
+export interface IMedical_history {
+     userId: number
+     start_date: string
+     images: string[]
+     description: string
+}
+
+export interface ImageUploadResult {
+     image: string;
+     path: string;
+     error?: string;
+}

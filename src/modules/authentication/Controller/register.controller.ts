@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { pending_token } from "../../../utils/JWT/pending.account.jwt";
 import { registerDto } from "../DTO/index.dto";
 import { avatarProfile } from "../shared/avatar.image.fun";
-import { UserRole } from "../../../generated/prisma";
+import { UserRole, UserStatus } from "../../../generated/prisma";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
@@ -33,6 +33,7 @@ export const registerController = asyncHandler(
                     username,
                     code,
                     phone,
+                    status: UserStatus.INACTIVE,
                     role: role as UserRole,
                     password: hashedPassword,
                }

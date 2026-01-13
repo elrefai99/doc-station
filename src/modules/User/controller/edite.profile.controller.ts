@@ -4,9 +4,11 @@ import prisma from "../../../config/prisma";
 import { imageProcess } from "../../../Common/shared/upload/image.process";
 import fs from 'fs-extra'
 import { cacheService } from "../../../Common/shared/Redis/cache.service.fun";
+import { userprofile } from "../DTO/index.dto";
 
 export const editProfileController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
+          const data: userprofile = req.body as userprofile
           let avatar
           const imageProcessing: imageProcess = new imageProcess()
           if (req.file) {
@@ -25,7 +27,7 @@ export const editProfileController = asyncHandler(
                data: {
                     avatar: avatar,
                     updatedAt: new Date(),
-                    ...req.body
+                    ...data
                }
           })
           const redis: cacheService = new cacheService()
