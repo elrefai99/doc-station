@@ -8,36 +8,37 @@ datasource db {
 }
 
 model User {
-  id              Int        @id @default(autoincrement())
-  fullname        String     @db.VarChar(255)
-  username        String     @unique @db.VarChar(255)
-  email           String     @db.VarChar(255)
-  password        String     @db.VarChar(255)
-  code            String     @default("") @db.VarChar(255)
-  phone           String     @default("") @db.VarChar(255)
-  address         String     @default("") @db.VarChar(255)
-  city            String     @default("") @db.VarChar(255)
-  state           String     @default("") @db.VarChar(255)
-  zip             String     @default("") @db.VarChar(255)
-  role            UserRole   @default(PATIENT)
-  status          UserStatus @default(ACTIVE)
-  isVerified      Boolean    @default(false)
-  isActive        Boolean    @default(true)
-  isDeleted       Boolean    @default(false)
-  isArchived      Boolean    @default(false)
-  isSuspended     Boolean    @default(false)
-  isLocked        Boolean    @default(false)
-  isExpired       Boolean    @default(false)
-  isExpiring      Boolean    @default(false)
-  isExpiredSoon   Boolean    @default(false)
-  updatePAssword  DateTime   @default(now())
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  avatar          String     @default("") @db.VarChar(255)
-  Bio             String     @default("") @db.VarChar(255)
-  doctorBookings  Booking[]  @relation("DoctorBookings")
-  patientBookings Booking[]  @relation("PatientBookings")
-  otps            OTP[]
+  id               Int               @id @default(autoincrement())
+  fullname         String            @db.VarChar(255)
+  username         String            @unique @db.VarChar(255)
+  email            String            @db.VarChar(255)
+  password         String            @db.VarChar(255)
+  code             String            @default("") @db.VarChar(255)
+  phone            String            @default("") @db.VarChar(255)
+  address          String            @default("") @db.VarChar(255)
+  city             String            @default("") @db.VarChar(255)
+  state            String            @default("") @db.VarChar(255)
+  zip              String            @default("") @db.VarChar(255)
+  role             UserRole          @default(PATIENT)
+  status           UserStatus        @default(ACTIVE)
+  isVerified       Boolean           @default(false)
+  isActive         Boolean           @default(true)
+  isDeleted        Boolean           @default(false)
+  isArchived       Boolean           @default(false)
+  isSuspended      Boolean           @default(false)
+  isLocked         Boolean           @default(false)
+  isExpired        Boolean           @default(false)
+  isExpiring       Boolean           @default(false)
+  isExpiredSoon    Boolean           @default(false)
+  updatePAssword   DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  avatar           String            @default("") @db.VarChar(255)
+  Bio              String            @default("") @db.VarChar(255)
+  doctorBookings   Booking[]         @relation("DoctorBookings")
+  patientBookings  Booking[]         @relation("PatientBookings")
+  otps             OTP[]
+  medicalHistories medical_history[]
 
   @@index([status])
   @@index([email])
@@ -52,6 +53,20 @@ model OTP {
   expire String    @db.VarChar(255)
   status OTPStatus @default(PENDING)
   user   User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model medical_history {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  start_date  String   @db.VarChar(255)
+  images      String[] @db.VarChar(255)
+  description String   @db.VarChar(255)
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Gallery {
