@@ -39,6 +39,7 @@ model User {
   patientBookings  Booking[]         @relation("PatientBookings")
   otps             OTP[]
   medicalHistories medical_history[]
+  doctorProfiles   doctor_profile[]
 
   @@index([status])
   @@index([email])
@@ -47,12 +48,14 @@ model User {
 }
 
 model OTP {
-  id     Int       @id @default(autoincrement())
-  userId Int?
-  otp    Int
-  expire String    @db.VarChar(255)
-  status OTPStatus @default(PENDING)
-  user   User?     @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  userId    Int?
+  otp       Int
+  expire    String    @db.VarChar(255)
+  status    OTPStatus @default(PENDING)
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([userId])
 }
@@ -63,23 +66,75 @@ model medical_history {
   start_date  String   @db.VarChar(255)
   images      String[] @db.VarChar(255)
   description String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   user User? @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
+model doctor_profile {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  address       String   @default("")
+  governorateId Int
+  cityId        Int
+  timeStart     String   @db.VarChar(255)
+  timeEnd       String   @db.VarChar(255)
+  dateFrom      String   @db.VarChar(255)
+  dateTo        String   @db.VarChar(255)
+  price         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user        User?        @relation(fields: [userId], references: [id])
+  governorate governorate? @relation(fields: [governorateId], references: [id])
+  city        city?        @relation(fields: [cityId], references: [id])
+
+  @@index([userId])
+}
+
+model governorate {
+  id                  Int              @id @default(autoincrement())
+  number              String
+  governorate_name_ar String
+  governorate_name_en String
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  doctorProfiles      doctor_profile[]
+  cities              city[]
+}
+
+model city {
+  id                 Int      @id @default(autoincrement())
+  number             Int
+  governorate_number String
+  city_name_ar       String
+  city_name_en       String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  governorate governorate? @relation(fields: [number], references: [id])
+
+  doctorProfiles doctor_profile[]
+}
+
 model Gallery {
   id        Int       @id @default(autoincrement())
   url       String
   productId Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   product   Products? @relation(fields: [productId], references: [id])
 }
 
 model Brands {
-  id       Int        @id @default(autoincrement())
-  title    String     @db.VarChar(255)
-  products Products[]
+  id        Int        @id @default(autoincrement())
+  title     String     @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  products  Products[]
 }
 
 model Products {
@@ -109,12 +164,14 @@ model Blogs {
 }
 
 model Booking {
-  id        Int    @id @unique @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   patientId Int?
   dockerId  Int?
-  date      String @db.VarChar(255)
-  doctor    User?  @relation("DoctorBookings", fields: [dockerId], references: [id])
-  patient   User?  @relation("PatientBookings", fields: [patientId], references: [id])
+  date      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  doctor    User?    @relation("DoctorBookings", fields: [dockerId], references: [id])
+  patient   User?    @relation("PatientBookings", fields: [patientId], references: [id])
 }
 
 enum UserRole {
