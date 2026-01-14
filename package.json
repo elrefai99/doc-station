@@ -1,6 +1,6 @@
 {
   "name": "doc-station",
-  "version": "0.1.1",
+  "version": "1.2.1",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -12,8 +12,6 @@
     "test": "jest --detectOpenHandles --runInBand",
     "test:local": "NODE_ENV=development jest",
     "seed": "ts-node prisma/seeds/governorate.seed.ts",
-    "seed:city": "ts-node prisma/seeds/city.seed.ts",
-    "seed:all": "pnpm seed && pnpm seed:city",
     "taze:local": "npx taze -r",
     "taze:back": "npx taze major",
     "taze:update": "npx taze major -w",
