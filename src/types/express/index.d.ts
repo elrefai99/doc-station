@@ -6,6 +6,8 @@ declare global {
                user?: any;
                lang?: string;
                clientIP?: any;
+               governorate?: any
+               city?: any;
           }
      }
 }

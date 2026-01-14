@@ -46,6 +46,21 @@ export const registerController = asyncHandler(
                data: { avatar }
           })
 
+          if (role === UserRole.DOCTOR) {
+               await prisma.doctor_profile.create({
+                    data: {
+                         userId: Number(user.id),
+                         address: "",
+                         governorateId: 1,
+                         cityId: 1,
+                         timeStart: "08:00",
+                         timeEnd: "17:00",
+                         dateFrom: "2025-01-01",
+                         dateTo: "2025-12-31",
+                         price: 0
+                    }
+               })
+          }
           const token = pending_token(user?.id.toString())
 
           res.cookie("pending_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 24 * 60 * 60 * 1000 })
