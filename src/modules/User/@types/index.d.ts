@@ -44,3 +44,15 @@ export interface ImageUploadResult {
      path: string;
      error?: string;
 }
+
+export interface doctor_profile {
+     userId: number
+     address: string
+     governorateId: number
+     cityId: number
+     timeStart: string
+     timeEnd: string
+     dateFrom: string
+     dateTo: string
+     price: number
+}

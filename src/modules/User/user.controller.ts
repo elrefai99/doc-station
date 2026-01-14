@@ -1,3 +1,4 @@
+export { workHoursController } from "./controller/doctor/settings/work.hours.controller";
 export { deleteMedicalHistoryController } from "./controller/patient/delete.medical_history.controller";
 export { editMedicalHistoryController } from "./controller/patient/edit.medical_history.controller";
 export { getMedicalDataController } from "./controller/patient/get.medical_history.controller";

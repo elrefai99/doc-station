@@ -93,6 +93,8 @@ model doctor_profile {
   city        city?        @relation(fields: [cityId], references: [id])
 
   @@index([userId])
+  @@index([governorateId])
+  @@index([cityId])
 }
 
 model governorate {
