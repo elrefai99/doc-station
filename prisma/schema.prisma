@@ -117,7 +117,7 @@ model city {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  governorate governorate? @relation(fields: [number], references: [id])
+  governorate governorate? @relation(fields: [governorate_number], references: [id])
 
   doctorProfiles doctor_profile[]
 }
