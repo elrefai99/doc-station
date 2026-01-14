@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   app:
@@ -6,23 +6,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env
     environment:
       NODE_ENV: production
       REDIS_HOST: redis://redis:6379
+    ports:
+      - "${PORT}:9000"
     depends_on:
       - redis
     restart: always
     networks:
       - doc-station_network
-    volumes:
-      - .:/app
-      - /app/node_modules
 
   redis:
     image: redis:7-alpine
     container_name: redis
+    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     restart: always

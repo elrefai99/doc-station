@@ -1,5 +1,5 @@
 import prisma from "../../../config/prisma";
-import { OTPStatus } from "../../../generated/prisma";
+import { OTPStatus, UserStatus } from "../../../generated/prisma";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { NextFunction, Request, Response } from "express";
 import { access_token, refresh_token } from "../../../utils/JWT/active.accounts.jwt";
@@ -32,7 +32,14 @@ export const verifyOtpController = asyncHandler(
                     status: OTPStatus.VERIFIED
                }
           })
-
+          await prisma.user.update({
+               where: {
+                    id: Number(req.user.id)
+               },
+               data: {
+                    status: UserStatus.ACTIVE
+               }
+          })
           const token = access_token(req.user.id)
           const refreshToken = refresh_token(req.user.id)
 

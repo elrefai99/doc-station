@@ -9,13 +9,13 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Discord Notification Lesoll Server
+      - name: Send Discord Notification Server
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{
                     \"avatar_url\": \" https://github.com/${{ github.actor }}.png \",
                     \"username\": \" ${{ github.actor }} \",
-                    \"content\": \" Admin: @elrefai99 \nServer: EGYStay Server \nNew push in branch: **${{ github.ref_name }}** \nCommit: **${{ github.event.head_commit.message }}**\"
+                    \"content\": \" Admin: @elrefai99 \nServer: Doc Station Server \nNew push in branch: **${{ github.ref_name }}** \nCommit: **${{ github.event.head_commit.message }}**\"
                   }" \
-               ${{ secrets.DISCORD_WEBHOOK_LESOLL_SERVER }}
+               ${{ secrets.DISCORD_WEBHOOK_SERVER }}
