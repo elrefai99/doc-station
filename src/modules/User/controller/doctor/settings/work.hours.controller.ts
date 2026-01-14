@@ -15,7 +15,20 @@ export const workHoursController = asyncHandler(
                next(new ServerError("Doctor profile not found", 404))
                return
           }
+          const data = req.body
 
+          await prisma.doctor_profile.update({
+               where: {
+                    id: doctor_profile.id,
+                    userId: Number(req.user.id)
+               },
+               data: {
+                    address: data.address ? data.address : doctor_profile.address,
+                    governorateId: req.governorate ? req.governorate.id : doctor_profile.governorateId,
+                    cityId: req.city ? req.city.id : doctor_profile.cityId,
+                    ...data
+               }
+          })
           res.status(200).json({ code: 200, status: "Success", message: "Doctor profile found", data: doctor_profile })
           return
      }

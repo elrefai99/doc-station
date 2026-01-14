@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createNewMedicalHistoryController, editProfileController, getMedicalDataController, profileController, deleteMedicalHistoryController, editMedicalHistoryController, workHoursController } from "./user.controller";
+import { createNewMedicalHistoryController, editProfileController, getMedicalDataController, profileController, deleteMedicalHistoryController, editMedicalHistoryController, workHoursController, deleteProfileController } from "./user.controller";
 import { userMiddleware } from "../../middleware/authentication/user.middleware";
 import { medical_historyImage, uploadAvatar } from "../../middleware/multer";
 import { activeMiddleware } from "../../middleware/authentication/active.middleware";
@@ -10,6 +10,7 @@ const router: Router = Router();
 
 router.get("/profile", userMiddleware, profileController);
 router.put("/edit", activeMiddleware, uploadAvatar, editProfileController);
+router.delete("/delete", activeMiddleware, deleteProfileController);
 
 // Patient Pages
 router.post('/medical/create', patientMiddleware, medical_historyImage, createNewMedicalHistoryController)

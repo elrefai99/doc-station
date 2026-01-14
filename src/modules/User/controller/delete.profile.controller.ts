@@ -6,27 +6,51 @@ import { cacheService } from "../../../Common/shared/Redis/cache.service.fun";
 
 export const deleteProfileController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
-          await prisma.user.delete({
+          const userId = Number(req.user?.id);
+
+          const doctor_profile = await prisma.doctor_profile.findFirst({
                where: {
-                    id: Number(req.user?.id)
-               }
-          })
-          await prisma.doctor_profile.delete({
-               where: {
-                    id: Number(req.params.id),
-                    userId: Number(req.user?.id)
-               }
-          })
-          await prisma.medical_history.delete({
-               where: {
-                    id: Number(req.params.id),
-                    userId: Number(req.user.id),
+                    userId: userId
                },
+               select: {
+                    id: true
+               }
           });
 
-          const redis: cacheService = new cacheService()
-          await redis.deleteData(`user:${req.user.id}`)
-          res.status(200).json({ code: 200, status: "OK", message: "Success delete user data" })
-          return
+          const medical_history = await prisma.medical_history.findFirst({
+               where: {
+                    userId: userId,
+               },
+               select: {
+                    id: true
+               }
+          });
+
+          if (doctor_profile?.id) {
+               await prisma.doctor_profile.delete({
+                    where: {
+                         id: doctor_profile.id
+                    }
+               });
+          }
+
+          if (medical_history?.id) {
+               await prisma.medical_history.delete({
+                    where: {
+                         id: medical_history.id
+                    }
+               });
+          }
+
+          await prisma.user.delete({
+               where: {
+                    id: userId
+               }
+          });
+
+          const redis: cacheService = new cacheService();
+          await redis.deleteData(`user:${userId}`);
+          res.status(200).json({ code: 200, status: "OK", message: "Success delete user data" });
+          return;
      }
 )

@@ -11,11 +11,17 @@
     "start": "concurrently \"node ./dist/src/app.js\" \"node ./dist/src/Queue/worker.js\"",
     "test": "jest --detectOpenHandles --runInBand",
     "test:local": "NODE_ENV=development jest",
+    "seed": "ts-node prisma/seeds/governorate.seed.ts",
+    "seed:city": "ts-node prisma/seeds/city.seed.ts",
+    "seed:all": "pnpm seed && pnpm seed:city",
     "taze:local": "npx taze -r",
     "taze:back": "npx taze major",
     "taze:update": "npx taze major -w",
     "taze:patch": "npx taze patch",
     "compress:ubuntu": "sudo zip -r project.zip ."
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seeds/governorate.seed.ts"
   },
   "keywords": [],
   "author": "",

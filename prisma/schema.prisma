@@ -99,7 +99,7 @@ model doctor_profile {
 
 model governorate {
   id                  Int              @id @default(autoincrement())
-  number              String
+  number              Int
   governorate_name_ar String
   governorate_name_en String
   createdAt           DateTime         @default(now())
@@ -111,7 +111,7 @@ model governorate {
 model city {
   id                 Int      @id @default(autoincrement())
   number             Int
-  governorate_number String
+  governorate_number Int
   city_name_ar       String
   city_name_en       String
   createdAt          DateTime @default(now())

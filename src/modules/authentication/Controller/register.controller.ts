@@ -49,7 +49,7 @@ export const registerController = asyncHandler(
           if (role === UserRole.DOCTOR) {
                await prisma.doctor_profile.create({
                     data: {
-                         userId: user.id,
+                         userId: Number(user.id),
                          address: "",
                          governorateId: 1,
                          cityId: 1,
