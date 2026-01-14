@@ -1,13 +1,13 @@
 module.exports = {
      apps: [
           {
-               name: 'EGYStay',
+               name: 'Doc-Station',
                script: './dist/app.js',
                instances: 1,
                exec_mode: 'fork'
           },
           {
-               name: 'EGYStay-Worker',
+               name: 'Doc-Station-Worker',
                script: './dist/Queue/worker.js',
                instances: 1,
                exec_mode: 'fork'
