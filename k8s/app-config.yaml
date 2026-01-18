@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: doc-station-backend-config
+  namespace: doc-station
+data:
+  NODE_ENV: "production"
+  REDIS_HOST: "redis://redis:6379"

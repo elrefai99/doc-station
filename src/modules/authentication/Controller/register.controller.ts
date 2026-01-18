@@ -28,7 +28,7 @@ export const registerController = asyncHandler(
           const username = `${fullname.toLowerCase().split(' ').join('_')}_${Math.floor(Math.random() * 1000)}`
           const user = await prisma.user.create({
                data: {
-                    email,
+                    email: email.toLowerCase(),
                     fullname,
                     username,
                     code,

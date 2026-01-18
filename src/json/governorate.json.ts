@@ -1,4 +1,4 @@
-export const countryData = [
+export const governorateData = [
   {
     'id': 1,
     'number': 1,
