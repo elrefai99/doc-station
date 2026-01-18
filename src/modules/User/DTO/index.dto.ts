@@ -16,3 +16,16 @@ export class userprofile {
      public role: UserRole;
 
 }
+
+export class workHoursDTO {
+
+     @IsString()
+     public address: string;
+
+     @IsString()
+     public phone: string;
+
+     @IsString()
+     public role: UserRole;
+
+}

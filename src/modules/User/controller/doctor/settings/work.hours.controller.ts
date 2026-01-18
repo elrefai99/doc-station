@@ -16,6 +16,7 @@ export const workHoursController = asyncHandler(
                return
           }
           const data = req.body
+          console.log(data);
 
           await prisma.doctor_profile.update({
                where: {
@@ -23,9 +24,8 @@ export const workHoursController = asyncHandler(
                     userId: Number(req.user.id)
                },
                data: {
-                    address: data.address ? data.address : doctor_profile.address,
-                    governorateId: req.governorate ? req.governorate.id : doctor_profile.governorateId,
-                    cityId: req.city ? req.city.id : doctor_profile.cityId,
+                    governorateId: req.governorate ? Number(req.governorate?.id) : doctor_profile.governorateId,
+                    cityId: req.city ? Number(req.city?.id) : doctor_profile.cityId,
                     ...data
                }
           })

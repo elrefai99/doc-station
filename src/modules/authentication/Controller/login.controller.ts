@@ -12,7 +12,7 @@ export const loginController = asyncHandler(
 
           const cUser = await prisma.user.findFirst({
                where: {
-                    email,
+                    email: email.toLowerCase(),
                     status: UserStatus.ACTIVE
                }
           })

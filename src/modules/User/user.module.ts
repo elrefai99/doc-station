@@ -5,6 +5,8 @@ import { medical_historyImage, uploadAvatar } from "../../middleware/multer";
 import { activeMiddleware } from "../../middleware/authentication/active.middleware";
 import { patientMiddleware } from "../../middleware/authentication/patieny.middleware";
 import { doctorMiddleware } from "../../middleware/authentication/doctor.middleware";
+import { governorateMiddleware } from "../../middleware/address/governorate.middleware";
+import { cityMiddleware } from "../../middleware/address/city.middleware";
 
 const router: Router = Router();
 
@@ -19,5 +21,5 @@ router.put('/medical/edit/:id', patientMiddleware, medical_historyImage, editMed
 router.delete('/medical/delete/:id', patientMiddleware, deleteMedicalHistoryController)
 
 // doctor pages
-router.post('/work-hours', doctorMiddleware, workHoursController)
+router.post('/work-hours', doctorMiddleware, governorateMiddleware, cityMiddleware, workHoursController)
 export default router;

@@ -77,7 +77,7 @@ model medical_history {
 model doctor_profile {
   id            Int      @id @default(autoincrement())
   userId        Int
-  address       String   @default("")
+  address       Json
   governorateId Int
   cityId        Int
   timeStart     String   @db.VarChar(255)
