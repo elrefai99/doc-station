@@ -30,6 +30,14 @@ export const createBookingController = asyncHandler(
                     price: doctor.price as number
                }
           })
+          await prisma.rooms.create({
+               data: {
+                    senderID: req.user.id,
+                    receiverID: doctor.userId as number,
+                    bookingId: booking.id as number,
+                    lastMassage: "Hi Doctor"
+               }
+          })
 
           const emailBody = {
                subject: "Booking created successfully",

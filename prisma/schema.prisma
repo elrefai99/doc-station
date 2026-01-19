@@ -226,7 +226,7 @@ model rooms {
   senderID    Int
   receiverID  Int
   bookingId   Int?
-  lastMassage String
+  lastMassage String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

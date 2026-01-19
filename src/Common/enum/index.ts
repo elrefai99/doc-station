@@ -20,3 +20,17 @@ export enum OTPStatus {
      expired = "EXPIRED",
      failed = "FAILED"
 }
+
+export enum BookingStatus {
+     PENDING = "PENDING",
+     PAYMENT = "PAYMENT",
+     ACCEPTED = "ACCEPTED",
+     REJECTED = "REJECTED"
+}
+
+export enum OrderStatus {
+     PENDING = "PENDING",
+     SUCCESS = "SUCCESS",
+     REFUNDED = "REFUNDED",
+     FAILED = "FAILED"
+}
