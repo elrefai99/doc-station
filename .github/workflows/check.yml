@@ -26,5 +26,8 @@ jobs:
       - name: Install dependencies & devDependencies
         run: npm install -f
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
       - name: Run TypeScript build
         run: npm run build
