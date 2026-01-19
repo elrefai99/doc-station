@@ -50,7 +50,7 @@ export const registerController = asyncHandler(
                await prisma.doctor_profile.create({
                     data: {
                          userId: Number(user.id),
-                         address: "",
+                         address: {},
                          governorateId: 1,
                          cityId: 1,
                          timeStart: "08:00",
