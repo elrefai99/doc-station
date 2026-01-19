@@ -8,7 +8,7 @@ export const sendgridFunction = async (email: string, temp: string, subject: str
 
           const emailBody = {
                to: email,
-               from: "elrefai99@gmail.com",
+               from: "mohamed.mostafa0699@gmail.com",
                subject,
                html: temp
           }

@@ -1,6 +1,6 @@
 import { Queue, Job } from "bullmq";
 
-export const queue = new Queue("emailQueue", {
+export const queue = new Queue("emails", {
      connection: {
           url: process.env.NODE_ENV === "development" ? process.env.REDIS_HOST_LOCALHOST : process.env.REDIS_HOST,
      },
