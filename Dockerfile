@@ -10,6 +10,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 COPY package*.json ./
 RUN npm install -f
+RUN npm install concurrently
 
 COPY . .
 
