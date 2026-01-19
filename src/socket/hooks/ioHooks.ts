@@ -1,4 +1,3 @@
-export { ioUpload } from "./ioUpload";
+export { ioJoinRoom } from "../shared/ioJoin";
 export { ioChat } from "./ioChat";
 export { ioTyping } from "./ioTyping";
-export { ioJoinRoom } from "../../shared/ioJoin";

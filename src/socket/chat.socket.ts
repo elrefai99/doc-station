@@ -1,6 +1,8 @@
 import { Namespace, Socket } from "socket.io";
-import { socketMiddleware } from "../Middleware/authentication/socket.middleware";
-import { ioJoinRoom, ioTyping, ioChat, ioUpload } from "./hooks/chat/ioHooks"
+import { socketMiddleware } from "../middleware/authentication/socket.middleware";
+import { ioJoinRoom } from "./shared/ioJoin";
+import { ioTyping } from "./hooks/ioTyping";
+import { ioChat } from "./hooks/ioChat";
 
 export const chatSocket = (io: Namespace,) => {
      const userSockets: Map<string, string> = new Map<string, string>();
@@ -17,7 +19,6 @@ export const chatSocket = (io: Namespace,) => {
           ioJoinRoom(socket)
           ioTyping(socket)
           ioChat(io, socket, userSockets)
-          ioUpload(io, socket, userSockets)
 
 
           socket.on('disconnect', () => {

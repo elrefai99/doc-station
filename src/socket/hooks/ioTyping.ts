@@ -1,10 +1,13 @@
 import { Socket } from "socket.io";
-import { UserModel } from "../../../Schema/User/user.schema";
+import prisma from "../../config/prisma";
 
 export const ioTyping = (cred: Socket) => {
      cred.on('typing', async (room: string, receiverID: string): Promise<void> => {
           cred.join(room);
-          const user = await UserModel.findById(receiverID, { fName: 1, lName: 1 })
-          cred.to(room).emit("typing", room, `${user?.fName} ${user?.lName}`)
+          const user = await prisma.user.findUnique({
+               where: { id: Number(receiverID) },
+               select: { fullname: true }
+          })
+          cred.to(room).emit("typing", room, `${user?.fullname}`)
      })
 }

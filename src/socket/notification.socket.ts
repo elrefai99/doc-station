@@ -1,5 +1,5 @@
 import { Namespace, Socket } from "socket.io";
-import { socketMiddleware } from "../Middleware/authentication/socket.middleware";
+import { socketMiddleware } from "../middleware/authentication/socket.middleware";
 
 export const userNotificationSockets = new Map<string, string>();
 

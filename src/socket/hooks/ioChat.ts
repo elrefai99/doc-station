@@ -1,5 +1,8 @@
 import { Namespace, Socket } from "socket.io";
 import { getNotificationNamespace } from "../../socket.io";
+import prisma from "../../config/prisma";
+import { addJobToQueue } from "../../Queue/Emails/queue.email";
+import { userNotificationSockets } from "../notification.socket";
 
 export const ioChat = (io: Namespace, cred: Socket, userSockets: any) => {
      const senderID: string = cred.data.user._id.toString();
@@ -7,49 +10,69 @@ export const ioChat = (io: Namespace, cred: Socket, userSockets: any) => {
 
      cred.on('send_message', async (room: string, receiverID: string, text: string) => {
           cred.join(room);
-          const { message, wrong } = filterWords(text)
 
-          let usersRoom: any = await roomModel.findOne({ _id: room, type: "chat" }, { _id: 1, senderID: 1, receiverID: 1 });
-
-          const chat = await dmModel.create({
-               chatID: room,
-               senderID,
-               message,
-               organicMessge: text,
-               wrong
+          let usersRoom = await prisma.rooms.findFirst({
+               where: {
+                    id: Number(room),
+               }
+          })
+          const chat = await prisma.dmChat.create({
+               data: {
+                    chatID: Number(usersRoom?.id),
+                    senderID: Number(senderID),
+                    message: text,
+                    organicMessge: text,
+               }
           });
-          usersRoom!.lastMassage = message;
-          await usersRoom.save();
+
+          // Update the room's last message
+          if (usersRoom?.id) {
+               await prisma.rooms.update({
+                    where: { id: usersRoom.id },
+                    data: { lastMassage: text }
+               });
+          }
 
           io.to(room).emit('message_sent', {
-               ...chat.toObject(),
+               ...chat,
                senderID: {
                     _id: cred.data.user?._id,
-                    fullname: `${cred.data.user?.fName} ${cred.data.user?.lName}`,
+                    fullname: `${cred.data.user?.fullname}`,
                }
           });
           const notificationIO = getNotificationNamespace();
-          await prisma.
-          await notificationModel.create({
-               user: receiverID,
-               content: `New message from ${cred.data.user?.fName} ${cred.data.user?.lName}`,
-               link: `/en/user/inbox`
+          await prisma.notification.create({
+               data: {
+                    userId: Number(receiverID),
+                    status: 'unread',
+                    content: `New message from ${cred.data.user?.fullname}`,
+                    link: `/en/user/inbox`
+               }
           })
 
-          let otherUserId: string = usersRoom?.senderID.toString() === senderID ? usersRoom?.receiverID : usersRoom?.senderID;
+          let otherUserId: number | undefined = usersRoom?.senderID.toString() === senderID ? usersRoom?.receiverID : usersRoom?.senderID;
 
-          const userData = await UserModel.findById(otherUserId, { fName: 1, username: 1, email: 1, avatar: 1, notification_emails: 1 });
+          if (!otherUserId) return;
 
-          if (userData && userData?.notification_emails.guest_and_host_message) {
+          const userData = await prisma.user.findUnique({
+               where: { id: otherUserId },
+               select: {
+                    fullname: true,
+                    username: true,
+                    email: true,
+                    avatar: true,
+               }
+          });
 
+          if (userData) {
                const data = {
                     email: userData.email,
-                    user: `${userData?.fName} ${userData?.lName}`,
+                    user: userData.fullname,
                     senderName: {
                          name: `${cred.data.user?.fName} ${cred.data.user?.lName}`,
                          avatar: cred.data.user?.avatar
                     },
-                    message: message,
+                    message: text,
                     type: "chat",
                     subject: "New Message Notification",
                };
@@ -66,6 +89,5 @@ export const ioChat = (io: Namespace, cred: Socket, userSockets: any) => {
                title: `${cred.data.user?.fName} ${cred.data.user?.lName} sent you a message`,
                link: `/user/inbox`
           });
-          await notificationCount(receiverID);
      });
 }
