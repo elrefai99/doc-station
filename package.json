@@ -12,6 +12,8 @@
     "test": "jest --detectOpenHandles --runInBand",
     "test:local": "NODE_ENV=development jest",
     "seed": "ts-node prisma/seeds/governorate.seed.ts",
+    "seed:city": "ts-node prisma/seeds/city.seed.ts",
+    "seed:all": "ts-node prisma/seeds/seed.ts",
     "taze:local": "npx taze -r",
     "taze:back": "npx taze major",
     "taze:update": "npx taze major -w",
@@ -19,7 +21,7 @@
     "compress:ubuntu": "sudo zip -r project.zip ."
   },
   "prisma": {
-    "seed": "ts-node prisma/seeds/governorate.seed.ts"
+    "seed": "ts-node prisma/seeds/seed.ts"
   },
   "keywords": [],
   "author": "",
