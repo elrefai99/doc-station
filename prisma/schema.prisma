@@ -40,6 +40,13 @@ model User {
   otps             OTP[]
   medicalHistories medical_history[]
   doctorProfiles   doctor_profile[]
+  doctorOrders     Order[]           @relation("DoctorOrders")
+  patientOrders    Order[]           @relation("PatientOrders")
+  orders           Order[]
+  notifications    notification[]
+  RoomsSender      rooms[]           @relation("RoomsSender")
+  RoomsReceiver    rooms[]           @relation("RoomsReceiver")
+  dmChatSender     dmChat[]          @relation("dmChatSender")
 
   @@index([status])
   @@index([email])
@@ -166,14 +173,81 @@ model Blogs {
 }
 
 model Booking {
-  id        Int      @id @unique @default(autoincrement())
+  id        Int           @id @unique @default(autoincrement())
   patientId Int?
-  dockerId  Int?
-  date      String   @db.VarChar(255)
+  doctorId  Int?
+  status    BookingStatus @default(PENDING)
+  date      String        @db.VarChar(255)
+  time      String        @db.VarChar(255)
+  price     Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  doctor    User?         @relation("DoctorBookings", fields: [doctorId], references: [id])
+  patient   User?         @relation("PatientBookings", fields: [patientId], references: [id])
+  orders    Order[]
+  rooms     rooms[]
+}
+
+model Order {
+  id        Int         @id @unique @default(autoincrement())
+  patientId Int?
+  doctorId  Int?
+  bookingId Int?
+  productId Int?
+  status    OrderStatus @default(PENDING)
+  idBooking Boolean     @default(false)
+  idProduct Boolean     @default(false)
+  date      String      @db.VarChar(255)
+  time      String      @db.VarChar(255)
+  price     Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  doctor  User?    @relation("DoctorOrders", fields: [doctorId], references: [id])
+  patient User?    @relation("PatientOrders", fields: [patientId], references: [id])
+  booking Booking? @relation(fields: [bookingId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id])
+  userId  Int?
+}
+
+model notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  status    String
+  content   String
+  link      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  doctor    User?    @relation("DoctorBookings", fields: [dockerId], references: [id])
-  patient   User?    @relation("PatientBookings", fields: [patientId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model rooms {
+  id          Int      @id @default(autoincrement())
+  senderID    Int
+  receiverID  Int
+  bookingId   Int?
+  lastMassage String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sender     User?    @relation("RoomsSender", fields: [senderID], references: [id])
+  receiver   User?    @relation("RoomsReceiver", fields: [receiverID], references: [id])
+  booking    Booking? @relation(fields: [bookingId], references: [id])
+  dmChatChat dmChat[] @relation("dmChatChat")
+}
+
+model dmChat {
+  id            Int      @id @default(autoincrement())
+  chatID        Int?
+  senderID      Int?
+  seen          Boolean  @default(false)
+  message       String
+  organicMessge String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sender User?  @relation("dmChatSender", fields: [senderID], references: [id])
+  chat   rooms? @relation("dmChatChat", fields: [chatID], references: [id])
 }
 
 enum UserRole {
@@ -190,6 +264,20 @@ enum UserStatus {
   SUSPENDED
   DELETED
   ARCHIVED
+}
+
+enum BookingStatus {
+  PENDING
+  PAYMENT
+  ACCEPTED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  SUCCESS
+  REFUNDED
+  FAILED
 }
 
 enum OTPStatus {
