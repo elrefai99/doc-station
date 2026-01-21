@@ -29,12 +29,15 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install -f
+RUN npm install -g pm2
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
 COPY --from=builder /app/prisma ./prisma
 
 COPY package.json ./dist/package.json
+COPY . .
 
 EXPOSE 9000
-CMD ["node", "dist/src/app.js"]
+
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
