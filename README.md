@@ -117,22 +117,22 @@ A comprehensive healthcare platform connecting patients with orthopedic surgeons
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        Client Layer                          │
-│  (Mobile Apps, Web Browsers, Admin Dashboard)               │
+│                       Client Layer                          │
+│       (Mobile Apps, Web Browsers, Admin Dashboard)          │
 └───────────────────────┬─────────────────────────────────────┘
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     API Gateway (Nginx)                      │
+│                     API Gateway (Nginx)                     │
 └───────────────────────┬─────────────────────────────────────┘
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Express.js Application                     │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │   REST API   │  │  WebSocket   │  │   Swagger    │      │
-│  │  Endpoints   │  │  (Socket.IO) │  │     Docs     │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                   Express.js Application                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   REST API   │  │  WebSocket   │  │   Swagger    │       │
+│  │  Endpoints   │  │  (Socket.IO) │  │     Docs     │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
 └───────────────────────┬─────────────────────────────────────┘
                         │
         ┌───────────────┼───────────────┐
