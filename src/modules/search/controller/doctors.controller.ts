@@ -5,10 +5,20 @@ import { matchDoctor } from "../utils/match.doctor";
 import { governorateData } from "../../../json/governorate.json";
 import { cityData } from "../../../json/region.json";
 import { SearchDoctorDto } from "../DTO/index.dto";
+import { cacheService } from "../../../Common/shared/Redis/cache.service.fun";
 
 export const doctorsSearchController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const { limit = 10, page = 1, ...search } = req.query as SearchDoctorDto
+
+          const redis: cacheService = new cacheService()
+          const cacheKey = `${process.env.doctors_search}_${JSON.stringify(search)}`
+
+          const cachedDoctors = await redis.getData(cacheKey)
+          if (cachedDoctors) {
+               res.status(200).json({ ...cachedDoctors })
+               return
+          }
 
           const doctors = await prisma.doctor_profile.findMany({
                where: {
@@ -59,6 +69,8 @@ export const doctorsSearchController = asyncHandler(
                     city
                }
           })
+          const data = { code: 200, status: "Success", doctors: doctorsWithData, count }
+          await redis.setExData(cacheKey, data, 60 * 60 * 1000)
           res.status(200).json({ code: 200, status: "Success", doctors: doctorsWithData, count })
      }
 )
