@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { createNewMedicalHistoryController, editProfileController, getMedicalDataController, profileController, deleteMedicalHistoryController, editMedicalHistoryController, workHoursController, deleteProfileController, getPatientOverviewController } from "./user.controller";
-import { userMiddleware } from "../../middleware/authentication/user.middleware";
 import { medical_historyImage, uploadAvatar } from "../../middleware/multer";
 import { activeMiddleware } from "../../middleware/authentication/active.middleware";
 import { patientMiddleware } from "../../middleware/authentication/patieny.middleware";
 import { doctorMiddleware } from "../../middleware/authentication/doctor.middleware";
 import { governorateMiddleware } from "../../middleware/address/governorate.middleware";
 import { cityMiddleware } from "../../middleware/address/city.middleware";
+import { userMiddleware } from "../../middleware/authentication/user.middleware";
 
 const router: Router = Router();
 
