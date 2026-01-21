@@ -6,7 +6,7 @@ export const singleProductController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const { id } = req.params
           const product = await prisma.products.findUnique({
-               where: { slug: id },
+               where: { slug: String(id) },
                include: { image: true }
           })
           if (!product) {
