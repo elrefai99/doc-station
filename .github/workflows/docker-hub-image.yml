@@ -43,8 +43,8 @@ jobs:
           context: .
           push: ${{ steps.check-dockerhub.outputs.push }}
           tags: |
-            ${{ steps.check-dockerhub.outputs.push == 'true' && format('{0}/egystay:latest', secrets.DOKCER_USERNAME) || 'egystay:local' }}
-            ${{ steps.check-dockerhub.outputs.push == 'true' && format('{0}/egystay:{1}', secrets.DOKCER_USERNAME, github.sha) || format('egystay:{0}', github.sha) }}
+            ${{ steps.check-dockerhub.outputs.push == 'true' && format('{0}/Doc-Station:latest', secrets.DOKCER_USERNAME) || 'Doc-Station:local' }}
+            ${{ steps.check-dockerhub.outputs.push == 'true' && format('{0}/Doc-Station:{1}', secrets.DOKCER_USERNAME, github.sha) || format('Doc-Station:{0}', github.sha) }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -59,7 +59,7 @@ jobs:
           echo "- **Push to DockerHub**: ${{ steps.check-dockerhub.outputs.push == 'true' && 'Yes' || 'No (credentials not configured)' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit SHA**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check-dockerhub.outputs.push }}" == "true" ]; then
-            echo "- **Image Tags**: \`${{ secrets.DOKCER_USERNAME }}/egystay:latest\`, \`${{ secrets.DOKCER_USERNAME }}/egystay:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- **Image Tags**: \`${{ secrets.DOKCER_USERNAME }}/Doc-Station:latest\`, \`${{ secrets.DOKCER_USERNAME }}/Doc-Station:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           else
-            echo "- **Image Tag**: \`egystay:local\`, \`egystay:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- **Image Tag**: \`Doc-Station:local\`, \`Doc-Station:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           fi
