@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import prisma from "../../../config/prisma";
-import { imageProcess } from "../../../Common/shared/upload/image.process";
 import fs from 'fs-extra'
 import { cacheService } from "../../../Common/shared/Redis/cache.service.fun";
 import { userprofile } from "../DTO/index.dto";
+import { avatarProcess } from "../shared/upload.image.shared";
 
 export const editProfileController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const data: userprofile = req.body as userprofile
           let avatar
-          const imageProcessing: imageProcess = new imageProcess()
           if (req.file) {
                if (req.file.filename === "img") {
-                    avatar = await imageProcessing.avatarFunction(req.file.filename, req.user?.id)
+                    avatar = await avatarProcess(req.file.filename, req.user?.id)
                     fs.remove(req.file.path, (err: any) => {
                          if (err) throw err
                     })

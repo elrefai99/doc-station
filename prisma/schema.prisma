@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id               Int               @id @default(autoincrement())
+  id               Int               @id @unique @default(autoincrement())
   fullname         String            @db.VarChar(255)
   username         String            @unique @db.VarChar(255)
   email            String            @db.VarChar(255)
@@ -56,7 +56,7 @@ model User {
 }
 
 model OTP {
-  id        Int       @id @default(autoincrement())
+  id        Int       @id @unique @default(autoincrement())
   userId    Int?
   otp       Int
   expire    String    @db.VarChar(255)
@@ -69,7 +69,7 @@ model OTP {
 }
 
 model medical_history {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   userId      Int
   start_date  String   @db.VarChar(255)
   images      String[] @db.VarChar(255)
@@ -83,7 +83,7 @@ model medical_history {
 }
 
 model doctor_profile {
-  id            Int      @id @default(autoincrement())
+  id            Int      @id @unique @default(autoincrement())
   userId        Int
   address       Json
   governorateId Int
@@ -106,7 +106,7 @@ model doctor_profile {
 }
 
 model governorate {
-  id                  Int              @id @default(autoincrement())
+  id                  Int              @id @unique @default(autoincrement())
   number              Int
   governorate_name_ar String
   governorate_name_en String
@@ -117,7 +117,7 @@ model governorate {
 }
 
 model city {
-  id                 Int      @id @default(autoincrement())
+  id                 Int      @id @unique @default(autoincrement())
   number             Int
   governorate_number Int
   city_name_ar       String
@@ -131,7 +131,7 @@ model city {
 }
 
 model Gallery {
-  id        Int       @id @default(autoincrement())
+  id        Int       @id @unique @default(autoincrement())
   url       String
   productId Int?
   createdAt DateTime  @default(now())
@@ -140,7 +140,7 @@ model Gallery {
 }
 
 model Brands {
-  id        Int        @id @default(autoincrement())
+  id        Int        @id @unique @default(autoincrement())
   title     String     @db.VarChar(255)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -148,13 +148,13 @@ model Brands {
 }
 
 model Products {
-  id          Int       @id @default(autoincrement())
+  id          Int       @id @unique @default(autoincrement())
   adminId     Int?
   title       String?   @db.VarChar(255)
   slug        String    @unique @db.VarChar(255)
   description String?   @db.VarChar(255)
   content     String?   @db.VarChar(255)
-  price       Decimal   @db.Decimal(10, 2)
+  price       Decimal?  @db.Decimal(10, 2)
   brandId     Int?
   tags        String[]
   createdAt   DateTime  @default(now())
@@ -229,7 +229,7 @@ model Order {
 }
 
 model notification {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   userId    Int?
   status    String
   content   String
@@ -240,7 +240,7 @@ model notification {
 }
 
 model rooms {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   senderID    Int
   receiverID  Int
   bookingId   Int?
@@ -255,7 +255,7 @@ model rooms {
 }
 
 model dmChat {
-  id            Int      @id @default(autoincrement())
+  id            Int      @id @unique @default(autoincrement())
   chatID        Int?
   senderID      Int?
   seen          Boolean  @default(false)
