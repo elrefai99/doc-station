@@ -9,11 +9,13 @@ import { aws_client } from "../../../config/aws";
 export class imageProcess {
 
      public async albumUpload(payload: any, ImagesID: any) {
-          if (!payload.file || !payload.file["multiImage"]) {
+          console.log(payload);
+
+          if (!payload || !payload["multiImage"]) {
                return { error: "No images uploaded" };
           }
 
-          const uploadTasks = payload.file["multiImage"].map(async (file: any) => {
+          const uploadTasks = payload["multiImage"].map(async (file: any) => {
                try {
                     const url = await this.imageProcess(file.filename, ImagesID);
                     return { image: url, path: file.path };
@@ -80,7 +82,7 @@ export class imageProcess {
                }
           });
 
-          return `${process.env.public_CLOUD_URL}${fileName}`;
+          return `${process.env.IMAGE_SERVER_API}${fileName}`;
      };
 
      public async verifyImageUpload(payload: any, ImagesID: any) {
@@ -117,18 +119,18 @@ export class imageProcess {
                     console.log(err);
                }
           });
-          return `${process.env.public_CLOUD_URL}${fileName}`;
+          return `${process.env.IMAGE_SERVER_API}${fileName}`;
      }
 
      private async imageProcess(imgName: any, userID: any): Promise<string> {
-          const watermark = sharp(await readFile(path.join(__dirname, '../../../../', `public/ad/${imgName}`))).withMetadata().webp({ quality: 100, }).toBuffer();
+          const watermark = sharp(await readFile(path.join(__dirname, '../../../../', `public/product/${imgName}`))).withMetadata().webp({ quality: 100, }).toBuffer();
 
           const date = new Date();
           const day = date.getDate()
           const month = date.getMonth() + 1;
           const year = date.getFullYear();
 
-          const fileName = `public/ad/${year}/${month}/${day}/${userID}-${parseInt(
+          const fileName = `public/product/${year}/${month}/${day}/${userID}-${parseInt(
                Math.ceil(Math.random() * 100000001)
                     .toPrecision(8)
                     .toString()
@@ -143,7 +145,7 @@ export class imageProcess {
 
           await aws_client.send(uploadParams);
           fs.unlink(
-               path.join(__dirname, '../../../../', `public/ad/${imgName}`),
+               path.join(__dirname, '../../../../', `public/product/${imgName}`),
                (err) => {
                     if (err) {
                          console.log(err);
@@ -151,6 +153,6 @@ export class imageProcess {
                }
           );
 
-          return `${process.env.public_CLOUD_URL}${fileName}`;
+          return `${process.env.IMAGE_SERVER_API}${fileName}`;
      };
 }

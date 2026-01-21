@@ -6,12 +6,16 @@ import ServerError from "../../utils/api.errors.utils";
 function destination(req: Request, _file: any, callback: any) {
      const { baseUrl } = req;
      const isUser = baseUrl === "/api/v1/user";
+     const isProduct = baseUrl === "/api/v1/product";
 
      const folderPath = path.join(__dirname, "../../../public",
           isUser ?
                "user"
                :
-               ""
+               isProduct ?
+                    "product"
+                    :
+                    ""
      );
 
      callback(null, folderPath);
@@ -61,5 +65,19 @@ export const medical_historyImage: any = multer({
 }).fields([
      {
           name: 'images',
+     },
+])
+
+export const uploadMultiImage: any = multer({
+     storage: multerStorage,
+     limits: {
+          fileSize: 75 * 1024 * 1024,
+     },
+}).fields([
+     {
+          name: 'mainImage',
+     },
+     {
+          name: 'multiImage',
      },
 ])
