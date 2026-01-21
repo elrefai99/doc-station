@@ -28,6 +28,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: npx prisma generate
+        env:
+          DATABASE_URL:  ${{ secrets.DATABASE_URL }}
 
       - name: Run TypeScript build
         run: npm run build
