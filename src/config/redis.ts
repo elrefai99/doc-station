@@ -1,14 +1,14 @@
 import { createClient } from 'redis';
 
 const client: any = createClient({
-     url: process.env.NODE_ENV == "development" ? process.env.REDIS_HOST_LOCALHOST : process.env.REDIS_HOST,
+     url: process.env.REDIS_HOST,
      socket: {
           connectTimeout: 30000,
           reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
      },
 });
 
-client.connect().then(() => console.log(`🛢️  Redis connected successfully: ${process.env.NODE_ENV === "development" ? process.env.REDIS_HOST_LOCALHOST : process.env.REDIS_HOST}`));
+client.connect().then(() => console.log(`🛢️  Redis connected successfully: ${process.env.REDIS_HOST}`));
 client.on("error", (err: any) => console.log("Redis Client Error", err));
 
 process.on('SIGINT', async () => {

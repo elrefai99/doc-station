@@ -1,14 +1,13 @@
 import sdGraid from "@sendgrid/mail"
 
-const sendGraid_API_KEY = process.env.SENDGRID_API_KEY as string
-
 export const sendgridFunction = async (email: string, temp: string, subject: string) => {
      try {
+          const sendGraid_API_KEY = process.env.SENDGRID_API_KEY as string
           sdGraid.setApiKey(sendGraid_API_KEY)
 
           const emailBody = {
                to: email,
-               from: "mohamed.mostafa0699@gmail.com",
+               from: "elrefai99@gmail.com",
                subject,
                html: temp
           }

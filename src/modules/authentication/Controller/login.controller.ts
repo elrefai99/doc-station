@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { access_token, refresh_token } from "../../../utils/JWT/active.accounts.jwt";
 import { loginDto } from "../DTO/index.dto";
+import { addJobToQueue } from "../../../Queue/Emails/queue.email";
 
 export const loginController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
@@ -28,6 +29,14 @@ export const loginController = asyncHandler(
                res.status(400).json({ code: 400, status: "Bad Request", message: "Invalid password" })
                return
           }
+
+          const email_body = {
+               email: email,
+               temp: `Success Login`,
+               subject: "Login",
+               type: "login"
+          }
+          await addJobToQueue("emails", email_body)
 
           const token = access_token(String(cUser.id))
           const refreshToken = refresh_token(String(cUser.id))

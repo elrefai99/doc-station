@@ -3,6 +3,7 @@ import { OTPStatus } from "../../../generated/prisma";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { NextFunction, Request, Response } from "express";
 import { generateOtp } from "../shared/otp.function";
+import { addJobToQueue } from "../../../Queue/Emails/queue.email";
 
 export const sendOtpController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
@@ -34,6 +35,14 @@ export const sendOtpController = asyncHandler(
                     status: OTPStatus.PENDING
                }
           })
+
+          const email_body = {
+               email: req.user.email,
+               temp: `Your OTP is ${otp}`,
+               subject: "Doctor Station OTP",
+               type: "otp"
+          }
+          await addJobToQueue("emails", email_body)
 
           res.status(200).json({ code: 200, status: "Success", message: "OTP sent successfully" })
      }
