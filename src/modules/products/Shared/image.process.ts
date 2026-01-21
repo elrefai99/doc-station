@@ -3,7 +3,6 @@ import fs from "fs-extra";
 import { readFile } from "fs/promises";
 import sharp from "sharp";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import ServerError from "../../../utils/api.errors.utils";
 import { aws_client } from "../../../config/aws";
 
 export class imageProcess {
@@ -84,43 +83,6 @@ export class imageProcess {
 
           return `${process.env.IMAGE_SERVER_API}${fileName}`;
      };
-
-     public async verifyImageUpload(payload: any, ImagesID: any) {
-          if (!payload?.file || (!payload.file["nationalID"] && !payload.file["pics"])) {
-               throw new ServerError("No images uploaded", 406);
-          }
-          const nationalID = payload.file["nationalID"] ? await this.verifyAccountProcess(payload.file["nationalID"][0].filename, ImagesID) : "";
-          const pics = payload.file["pics"] ? await this.verifyAccountProcess(payload.file["pics"][0].filename, ImagesID) : "";
-
-          return { pics, nationalID };
-     }
-
-     public async verifyAccountProcess(imageName: any, user: string): Promise<string> {
-          const image = sharp(
-               await readFile(path.join(__dirname, "../../../../", `public/user/${imageName}`))
-          ).webp({ quality: 100 }).toBuffer()
-
-          const fileName = `verify/user/${user}/${parseInt(
-               Math.ceil(Math.random() * 100000001)
-                    .toPrecision(8)
-                    .toString()
-                    .replace(".", "")
-          )}.webp`;
-          const upload = new PutObjectCommand({
-               Bucket: process.env.AWS_S3_BUCKET as string,
-               Key: fileName,
-               Body: await image,
-               ContentType: "image/webp",
-          })
-
-          await aws_client.send(upload);
-          fs.unlink(path.join(__dirname, '../../../../', `public/user/${imageName}`), (err) => {
-               if (err) {
-                    console.log(err);
-               }
-          });
-          return `${process.env.IMAGE_SERVER_API}${fileName}`;
-     }
 
      private async imageProcess(imgName: any, userID: any): Promise<string> {
           const watermark = sharp(await readFile(path.join(__dirname, '../../../../', `public/product/${imgName}`))).withMetadata().webp({ quality: 100, }).toBuffer();

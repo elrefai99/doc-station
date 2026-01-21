@@ -1,0 +1,869 @@
+{
+  "info": {
+    "_postman_id": "1dfd9376-f94b-4d69-95af-44abae2f850b",
+    "name": "Doc Station",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23046091"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fullname\": \"Admin\",\n    \"email\": \"admin@doc-station.com\",\n    \"password\": \"test123456\",\n    \"code\": \"+20\",\n    \"phone\": \"1142314446\",\n    \"role\": \"ADMIN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/auth/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@doc-station.com\",\n    \"password\": \"test123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/auth/login",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/auth/logout",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/auth/refresh",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "OTP",
+      "item": [
+        {
+          "name": "send otp",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/otp/send",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "otp",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify otp",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"otp\": \"813179\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/otp/verify",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "otp",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Patient",
+          "item": [
+            {
+              "name": "Create new Medical Report",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "uuid": "82e1f211-1cd1-403e-a572-cc2849dc2c5a",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/100.jpg",
+                        "/Users/mohamedmostafa/Downloads/692d90ace8e50d742cc9ab02-77174683.webp",
+                        "/Users/mohamedmostafa/Downloads/106472.jpg"
+                      ]
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "2025-11-14",
+                      "type": "text",
+                      "uuid": "b375f319-2325-4533-b53c-fae448b0e1b1"
+                    },
+                    {
+                      "key": "description",
+                      "value": "القصة بدات بشوية قحة و مستشفي الحميات",
+                      "type": "text",
+                      "uuid": "9c833aba-5347-4361-b78a-c3ff88ba7532"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/user/medical/create",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "medical",
+                    "create"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get User Medical Reports",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}"
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/user/medical/get",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "medical",
+                    "get"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit User Medical Reports",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "start_date",
+                      "value": "2025-01-01",
+                      "type": "text",
+                      "uuid": "82366961-495e-486d-920f-48178e75996f"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/user/medical/edit/2",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "medical",
+                    "edit",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete User Medical Reports",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}"
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/user/medical/delete/id",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "medical",
+                    "delete",
+                    "id"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Doctor",
+          "item": [
+            {
+              "name": "OverView",
+              "item": [
+                {
+                  "name": "Patient",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "localhost:9000/api/v1/user/overview/patient",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "9000",
+                      "path": [
+                        "api",
+                        "v1",
+                        "user",
+                        "overview",
+                        "patient"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Add Work Hours and Days Works",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"address\": {\n        \"city\": \"banha\",\n        \"governorate\": \"Qaliubiya\"\n    },\n    \"timeStart\": \"13:00 PM\",\n\"timeEnd\": \"18:00 PM\",\n\"dateFrom\": \"Sun\",\n\"dateTo\": \"Thu\",\n\"price\":500\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/user/work-hours",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "work-hours"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}"
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/user/profile",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fullname",
+                  "value": "Ebi",
+                  "type": "text",
+                  "uuid": "1fca2ba9-c589-4e15-82ca-4a3b32b58dcd"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/user/edit",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "edit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User Medical Reports Copy",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"elrefai99@gmail.com\",\n    \"password\": \"test123456\"\n}"
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/user/delete",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search Doctors",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ebrahem04@gmail.com\",\n    \"password\": \"test123456\"\n}"
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/search/doctors",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "search",
+                "doctors"
+              ],
+              "query": [
+                {
+                  "key": "fullname",
+                  "value": "ahmed",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Booking",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"doctorId\": 2, \n    \"date\": \"Sun\", \n    \"time\": \"15:30 PM\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:9000/api/v1/booking/create",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "booking",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get reservation of doctor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:9000/api/v1/booking/doctor/reservations",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "booking",
+                "doctor",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get reservation of patient",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:9000/api/v1/booking/patient/reservations",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "booking",
+                "patient",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Admins",
+          "item": [
+            {
+              "name": "Delete products",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Xxsss",
+                      "type": "text",
+                      "uuid": "3fadff8d-3aa1-47b2-b342-152502bbc647"
+                    },
+                    {
+                      "key": "description",
+                      "value": "adasdaffffasdasdasfafasda",
+                      "type": "text",
+                      "uuid": "884231b1-45ca-431e-b444-3c4bd8eee9ce"
+                    },
+                    {
+                      "key": "price",
+                      "value": "6625",
+                      "type": "text",
+                      "uuid": "a5d01dda-4704-4feb-a5d9-f0405ca407e1"
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "e666b9c7-9744-4b97-aff1-d89d10d7cdf6",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/100.jpg",
+                        "/Users/mohamedmostafa/Downloads/692d90ace8e50d742cc9ab02-77174683.webp"
+                      ],
+                      "disabled": true
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "59939228-574a-4a37-8dc1-30f34a7375be",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/wallpaperflare.com_wallpaper (4).jpg",
+                        "/Users/mohamedmostafa/Downloads/Untitled diagram-2025-11-26-122728.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/product/delete/19",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "product",
+                    "delete",
+                    "19"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create new products",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Xxsss",
+                      "type": "text",
+                      "uuid": "3fadff8d-3aa1-47b2-b342-152502bbc647"
+                    },
+                    {
+                      "key": "description",
+                      "value": "adasdaffffasdasdasfafasda",
+                      "type": "text",
+                      "uuid": "884231b1-45ca-431e-b444-3c4bd8eee9ce"
+                    },
+                    {
+                      "key": "price",
+                      "value": "6625",
+                      "type": "text",
+                      "uuid": "a5d01dda-4704-4feb-a5d9-f0405ca407e1"
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "e666b9c7-9744-4b97-aff1-d89d10d7cdf6",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/100.jpg",
+                        "/Users/mohamedmostafa/Downloads/692d90ace8e50d742cc9ab02-77174683.webp"
+                      ],
+                      "disabled": true
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "59939228-574a-4a37-8dc1-30f34a7375be",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/wallpaperflare.com_wallpaper (4).jpg",
+                        "/Users/mohamedmostafa/Downloads/Untitled diagram-2025-11-26-122728.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/product/create",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "product",
+                    "create"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update products",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Xxsss",
+                      "type": "text",
+                      "uuid": "3fadff8d-3aa1-47b2-b342-152502bbc647"
+                    },
+                    {
+                      "key": "description",
+                      "value": "adasdaffffasdasdasfafasda",
+                      "type": "text",
+                      "uuid": "884231b1-45ca-431e-b444-3c4bd8eee9ce"
+                    },
+                    {
+                      "key": "price",
+                      "value": "6625",
+                      "type": "text",
+                      "uuid": "a5d01dda-4704-4feb-a5d9-f0405ca407e1"
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "e666b9c7-9744-4b97-aff1-d89d10d7cdf6",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/100.jpg",
+                        "/Users/mohamedmostafa/Downloads/692d90ace8e50d742cc9ab02-77174683.webp"
+                      ],
+                      "disabled": true
+                    },
+                    {
+                      "key": "multiImage",
+                      "type": "file",
+                      "uuid": "59939228-574a-4a37-8dc1-30f34a7375be",
+                      "src": [
+                        "/Users/mohamedmostafa/Downloads/wallpaperflare.com_wallpaper (4).jpg",
+                        "/Users/mohamedmostafa/Downloads/Untitled diagram-2025-11-26-122728.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "localhost:9000/api/v1/product/edit/19",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "9000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "product",
+                    "edit",
+                    "19"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get single product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:9000/api/v1/product/single/xxsss",
+              "host": [
+                "localhost"
+              ],
+              "port": "9000",
+              "path": [
+                "api",
+                "v1",
+                "product",
+                "single",
+                "xxsss"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": ""
+    }
+  ]
+}
