@@ -1,0 +1,8 @@
+import { Router } from 'express';
+import { <FTName | pascalcase>Controller } from './<FTName>.controller';
+
+const router: Router = Router();
+
+router.post('/<FTName>', <FTName | pascalcase>Controller);
+
+export default router;

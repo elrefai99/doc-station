@@ -1,0 +1,11 @@
+import { Request, Response } from 'express';
+import { asyncHandler } from '../../../utils/asyncHandler.utils';
+
+export const <FTName | pascalcase>Controller = asyncHandler(async (req: Request, res: Response) => {
+    // TODO: Implement <FTName> logic
+    
+    res.status(200).json({
+        success: true,
+        message: '<FTName> executed successfully'
+    });
+});

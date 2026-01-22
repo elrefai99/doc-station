@@ -1,0 +1,91 @@
+{
+  "folderTemplates.structures": [
+    {
+      "name": "NestJS Module",
+      "structure": [
+        {
+          "fileName": "<FTName>.controller.ts",
+          "template": "Main Controller"
+        },
+        {
+          "fileName": "<FTName>.module.ts",
+          "template": "Module"
+        },
+        {
+          "fileName": "<FTName>.swagger.ts",
+          "template": "Swagger"
+        },
+        {
+          "fileName": "Controller/<FTName>.controller.ts",
+          "template": "Controller"
+        },
+        {
+          "fileName": "DTO/index.dto.ts",
+          "template": "DTO"
+        },
+        {
+          "fileName": "shared/.gitkeep"
+        }
+      ]
+    }
+  ],
+  "folderTemplates.fileTemplates": {
+    "Main Controller": [
+      "export { <FTName | pascalcase>Controller } from './Controller/<FTName>.controller';"
+    ],
+    "Module": [
+      "import { Router } from 'express';",
+      "import { <FTName | pascalcase>Controller } from './<FTName>.controller';",
+      "",
+      "const router: Router = Router();",
+      "",
+      "router.post('/<FTName>', <FTName | pascalcase>Controller);",
+      "",
+      "export default router;"
+    ],
+    "Swagger": [
+      "/**",
+      " * @swagger",
+      " * /<FTName>:",
+      " *   post:",
+      " *     summary: <FTName | capitalize> endpoint",
+      " *     tags: [<FTName | capitalize>]",
+      " *     requestBody:",
+      " *       required: true",
+      " *       content:",
+      " *         application/json:",
+      " *           schema:",
+      " *             type: object",
+      " *     responses:",
+      " *       200:",
+      " *         description: Success",
+      " *       400:",
+      " *         description: Bad Request",
+      " */"
+    ],
+    "Controller": [
+      "import { Request, Response } from 'express';",
+      "import { asyncHandler } from '../../../utils/asyncHandler.utils';",
+      "",
+      "export const <FTName | pascalcase>Controller = asyncHandler(async (req: Request, res: Response) => {",
+      "    // TODO: Implement <FTName> logic",
+      "    ",
+      "    res.status(200).json({",
+      "        success: true,",
+      "        message: '<FTName> executed successfully'",
+      "    });",
+      "});"
+    ],
+    "DTO": [
+      "import { IsString, IsOptional } from 'class-validator';",
+      "",
+      "export class <FTName | pascalcase>Dto {",
+      "",
+      "    @IsString()",
+      "    public field: string;",
+      "",
+      "    // Add more fields as needed",
+      "}"
+    ]
+  }
+}

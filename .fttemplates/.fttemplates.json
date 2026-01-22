@@ -1,0 +1,20 @@
+{
+  "NestJS Module": {
+    "Controller/": [
+      {
+        "fileName": "<FTName>.controller.ts",
+        "template": "Controller Template"
+      }
+    ],
+    "DTO/": [
+      {
+        "fileName": "index.dto.ts",
+        "template": "DTO Template"
+      }
+    ],
+    "shared/": [],
+    "<FTName>.controller.ts": "Main Controller Template",
+    "<FTName>.module.ts": "Module Template",
+    "<FTName>.swagger.ts": "Swagger Template"
+  }
+}
