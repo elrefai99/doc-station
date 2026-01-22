@@ -24,6 +24,43 @@ export async function imagesUpload(payload: any, ImagesID: any) {
      return results;
 };
 
+export async function avatarProcess(imgName: any, userID: any): Promise<string> {
+
+     const watermark = sharp(
+          await readFile(path.join(__dirname, '../../../../', `public/user/${imgName}`))
+     ).resize({ width: 450, height: 450 })
+          .webp({ quality: 100 })
+          .toBuffer();
+
+     const date = new Date();
+     const day = date.getDate()
+     const month = date.getMonth() + 1;
+     const year = date.getFullYear();
+
+     const fileName = `public/user/${year}/${month}/${day}/${userID}-${parseInt(
+          Math.ceil(Math.random() * 100000001)
+               .toPrecision(8)
+               .toString()
+               .replace(".", "")
+     )}.webp`;
+
+     const upload = new PutObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET as string,
+          Key: fileName,
+          Body: await watermark,
+          ContentType: "image/webp",
+     })
+
+     await aws_client.send(upload);
+     fs.unlink(path.join(__dirname, '../../../../', `public/user/${imgName}`), (err) => {
+          if (err) {
+               console.log(err);
+          }
+     });
+
+     return `${process.env.IMAGE_SERVER_API}${fileName}`;
+};
+
 export async function imageProcess(imgName: any, userID: any): Promise<string> {
      const watermark = sharp(await readFile(path.join(__dirname, '../../../../', `public/user/${imgName}`))).withMetadata().webp({ quality: 100, }).toBuffer();
 

@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id               Int               @id @default(autoincrement())
+  id               Int               @id @unique @default(autoincrement())
   fullname         String            @db.VarChar(255)
   username         String            @unique @db.VarChar(255)
   email            String            @db.VarChar(255)
@@ -47,6 +47,7 @@ model User {
   RoomsSender      rooms[]           @relation("RoomsSender")
   RoomsReceiver    rooms[]           @relation("RoomsReceiver")
   dmChatSender     dmChat[]          @relation("dmChatSender")
+  products         Products[]
 
   @@index([status])
   @@index([email])
@@ -55,7 +56,7 @@ model User {
 }
 
 model OTP {
-  id        Int       @id @default(autoincrement())
+  id        Int       @id @unique @default(autoincrement())
   userId    Int?
   otp       Int
   expire    String    @db.VarChar(255)
@@ -68,7 +69,7 @@ model OTP {
 }
 
 model medical_history {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   userId      Int
   start_date  String   @db.VarChar(255)
   images      String[] @db.VarChar(255)
@@ -82,7 +83,7 @@ model medical_history {
 }
 
 model doctor_profile {
-  id            Int      @id @default(autoincrement())
+  id            Int      @id @unique @default(autoincrement())
   userId        Int
   address       Json
   governorateId Int
@@ -105,7 +106,7 @@ model doctor_profile {
 }
 
 model governorate {
-  id                  Int              @id @default(autoincrement())
+  id                  Int              @id @unique @default(autoincrement())
   number              Int
   governorate_name_ar String
   governorate_name_en String
@@ -116,7 +117,7 @@ model governorate {
 }
 
 model city {
-  id                 Int      @id @default(autoincrement())
+  id                 Int      @id @unique @default(autoincrement())
   number             Int
   governorate_number Int
   city_name_ar       String
@@ -130,7 +131,7 @@ model city {
 }
 
 model Gallery {
-  id        Int       @id @default(autoincrement())
+  id        Int       @id @unique @default(autoincrement())
   url       String
   productId Int?
   createdAt DateTime  @default(now())
@@ -139,7 +140,7 @@ model Gallery {
 }
 
 model Brands {
-  id        Int        @id @default(autoincrement())
+  id        Int        @id @unique @default(autoincrement())
   title     String     @db.VarChar(255)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -147,18 +148,24 @@ model Brands {
 }
 
 model Products {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.VarChar(255)
+  id          Int       @id @unique @default(autoincrement())
+  adminId     Int?
+  title       String?   @db.VarChar(255)
   slug        String    @unique @db.VarChar(255)
-  description String
-  content     String
-  price       Decimal   @db.Decimal(10, 2)
-  brandId     Int
+  description String?   @db.VarChar(255)
+  content     String?   @db.VarChar(255)
+  price       Decimal?  @db.Decimal(10, 2)
+  brandId     Int?
   tags        String[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   image       Gallery[]
-  brand       Brands    @relation(fields: [brandId], references: [id])
+  brand       Brands?   @relation(fields: [brandId], references: [id])
+  user        User?     @relation(fields: [adminId], references: [id])
+  orders      Order[]
+
+  @@index([adminId])
+  @@index([slug])
 }
 
 model Blogs {
@@ -189,29 +196,40 @@ model Booking {
 }
 
 model Order {
-  id        Int         @id @unique @default(autoincrement())
-  patientId Int?
-  doctorId  Int?
-  bookingId Int?
-  productId Int?
-  status    OrderStatus @default(PENDING)
-  idBooking Boolean     @default(false)
-  idProduct Boolean     @default(false)
-  date      String      @db.VarChar(255)
-  time      String      @db.VarChar(255)
-  price     Int
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id                    Int         @id @unique @default(autoincrement())
+  patientId             Int?
+  doctorId              Int?
+  bookingId             Int?
+  productId             Int?
+  status                OrderStatus @default(PENDING)
+  idBooking             Boolean     @default(false)
+  idProduct             Boolean     @default(false)
+  date                  String      @db.VarChar(255)
+  time                  String      @db.VarChar(255)
+  price                 Int
+  currencies            String      @default("EGP")
+  Trnx_id               String      @default("")
+  card_number           String      @default("")
+  method_payment        String      @default("")
+  payment_type          String      @default("")
+  payment_getway        String      @default("")
+  payment_getway_status String      @default("")
+  payment_getway_code   String      @default("")
+  data_message          String      @default("")
+  hmac_signature        String      @default("")
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 
-  doctor  User?    @relation("DoctorOrders", fields: [doctorId], references: [id])
-  patient User?    @relation("PatientOrders", fields: [patientId], references: [id])
-  booking Booking? @relation(fields: [bookingId], references: [id])
-  user    User?    @relation(fields: [userId], references: [id])
+  doctor  User?     @relation("DoctorOrders", fields: [doctorId], references: [id])
+  patient User?     @relation("PatientOrders", fields: [patientId], references: [id])
+  booking Booking?  @relation(fields: [bookingId], references: [id])
+  product Products? @relation(fields: [productId], references: [id])
+  user    User?     @relation(fields: [userId], references: [id])
   userId  Int?
 }
 
 model notification {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   userId    Int?
   status    String
   content   String
@@ -222,7 +240,7 @@ model notification {
 }
 
 model rooms {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   senderID    Int
   receiverID  Int
   bookingId   Int?
@@ -237,7 +255,7 @@ model rooms {
 }
 
 model dmChat {
-  id            Int      @id @default(autoincrement())
+  id            Int      @id @unique @default(autoincrement())
   chatID        Int?
   senderID      Int?
   seen          Boolean  @default(false)

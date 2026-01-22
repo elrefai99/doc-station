@@ -2,7 +2,6 @@ import { Job } from "bullmq";
 import { sendgridFunction } from "../shared/sendGrid.shared";
 
 export const sendEmail = async (data: any) => {
-     console.log(data)
      switch (data.type) {
           case "login":
                await sendgridFunction(data.email, data.html, data.subject)
@@ -20,6 +19,5 @@ export const sendEmail = async (data: any) => {
 
 export const jobProcessor = async (job: Job): Promise<any> => {
      console.log(job.data);
-
      await sendEmail(job.data);
 };
