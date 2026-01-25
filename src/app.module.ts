@@ -5,6 +5,7 @@ import otpModule from "./modules/OTP/otp.module";
 import searchModule from "./modules/search/search.module";
 import bookingModule from "./modules/Booking/booking.module";
 import productModule from "./modules/products/products.module";
+import paymentModule from "./modules/payment/payment.route";
 
 export default (app: Application) => {
      app.use("/api/v1/auth", authModule);
@@ -13,4 +14,5 @@ export default (app: Application) => {
      app.use("/api/v1/search", searchModule);
      app.use("/api/v1/booking", bookingModule);
      app.use("/api/v1/product", productModule);
+     app.use("/api/v1/payment", paymentModule);
 }

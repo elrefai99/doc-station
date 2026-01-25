@@ -4,7 +4,7 @@ import appConfig from './app.config';
 import * as http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { setupSwagger } from './swagger';
-//import { paymentService } from './modules/payment/shared/paymob.service';
+// import { paymentService } from './modules/payment/shared/paymob.service';
 
 const app = express();
 const server = http.createServer(app);
@@ -31,4 +31,4 @@ server.listen(PORT as string, () => {
   );
 });
 
-//paymentService.generateIntention();
+// paymentService.generateIntention();

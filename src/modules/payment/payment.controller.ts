@@ -1,1 +1,1 @@
-export { PaymentController } from './Controller/payment.controller';
+export { PaymentController } from './Controller/paymob.callback.controller';
