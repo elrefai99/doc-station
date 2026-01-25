@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { PaymobCallbackController } from './Controller/paymob.callback.controller';
-import { callbaclPaymobMiddleware } from './middleware/paymob.callback.middleware';
+import { PaymobCallbackController } from './controllers/paymob.callback.controller';
+import { callbaclPaymobMiddleware } from './providers/paymob/middleware/paymob.callback.middleware';
 //import { PaymentController } from './payment.controller';
 
 const router: Router = Router();

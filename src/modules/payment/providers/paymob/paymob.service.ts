@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { PaymobIntentionResponse } from '../types/paymob.types';
+import { PaymobIntentionResponse } from './paymob.types';
+import { PaymentProvider } from '../../interfaces/PaymentProvider';
 
-class PaymentService {
+class PaymobProvider implements PaymentProvider {
   constructor() {}
 
-  async generateIntention(): Promise<PaymobIntentionResponse | null> {
+  async createPayment(): Promise<PaymobIntentionResponse | null> {
     try {
       const response = await axios
 
@@ -65,17 +66,26 @@ class PaymentService {
         });
       console.log('Payment Intention Response:', response);
 
-      console.log(this.genratePaymentURL(response!.data.client_secret));
+      console.log(this.generatePaymentURL(response!.data.client_secret));
+
       return response.data;
+    
     } catch (error) {
       console.error('Error generating payment intention:', error);
     }
     return null;
   }
 
-  genratePaymentURL(clientSecret: string): String {
+  async verifyPayment(): Promise<any> {
+    // TODO: Implement payment verification logic
+    throw new Error('Method not implemented.');
+  }
+
+
+
+  private generatePaymentURL(clientSecret: string): String {
     return `${process.env.PAYMOB_PAYMENT_URL}?publicKey=${process.env.PAYMOB_PUBLIC_KEY_TEST}&clientSecret=${clientSecret}`;
   }
 }
 
-export const paymentService = new PaymentService();
+export { PaymobProvider };

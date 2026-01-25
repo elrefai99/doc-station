@@ -1,1 +1,0 @@
-export { PaymentController } from './Controller/paymob.callback.controller';
