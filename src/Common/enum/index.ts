@@ -34,3 +34,8 @@ export enum OrderStatus {
      REFUNDED = "REFUNDED",
      FAILED = "FAILED"
 }
+
+export enum PaymentProviderType {
+  PAYMOB = 'paymob',
+  PAYFORT = 'payfort',
+}

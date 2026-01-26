@@ -1,50 +1,64 @@
 import axios from 'axios';
-import { PaymobIntentionResponse } from './paymob.types';
+import { PaymobIntentionResponse } from './types/paymob.intention.types';
 import { PaymentProvider } from '../../interfaces/PaymentProvider';
+import { CreatePaymentDTO } from '../../DTO/payment.dto';
 
-class PaymobProvider implements PaymentProvider {
+export class PaymobProvider implements PaymentProvider {
   constructor() {}
 
-  async createPayment(): Promise<PaymobIntentionResponse | null> {
+  async createPayment(createPaymentDTO: CreatePaymentDTO): Promise<PaymobIntentionResponse | null> {
     try {
       const response = await axios
 
         .post<PaymobIntentionResponse>(
           process.env.PAYMOB_API_INTENTION as string,
           {
-            amount: 10000,
-            currency: 'EGP',
+            amount: createPaymentDTO.amount * 100, // Paymob expects amount in the smallest currency unit
+            currency: createPaymentDTO.currency || 'EGP',
             payment_methods: ['pbe test card'],
-            items: [
+            items: createPaymentDTO.items?.map(item => ({
+              name: item.name,
+              amount: item.amount * 100, // Convert to cents
+              description: item.description,
+              quantity: item.quantity,
+              ...(item.image && { image: item.image })
+            })) || [
               {
-                name: 'Item name 1',
-                amount: 10000,
-                description: 'Watch',
+                name: 'Default Item',
+                amount: createPaymentDTO.amount * 100,
+                description: 'Payment item',
                 quantity: 1,
-                image: 'https://thenounproject.com/browse/icons/term/hospital-appointments/',
               },
             ],
-            billing_data: {
-              apartment: '6',
-              first_name: 'test',
-              last_name: 'testing',
-              street: '938, Al-Jadeed Bldg',
-              building: '939',
-              phone_number: '+96824480228',
-              country: 'OMN',
-              email: 'AmmarSadek@gmail.com',
-              floor: '1',
-              state: 'Alkhuwair',
-            },
+            billing_data: createPaymentDTO.billingData ? {
+              first_name: createPaymentDTO.billingData.firstName,
+              last_name: createPaymentDTO.billingData.lastName,
+              email: createPaymentDTO.billingData.email,
+              phone_number: createPaymentDTO.billingData.phoneNumber,
+              street: createPaymentDTO.billingData.street,
+              building: createPaymentDTO.billingData.building,
+              floor: createPaymentDTO.billingData.floor,
+              apartment: createPaymentDTO.billingData.apartment,
+              city: createPaymentDTO.billingData.city,
+              state: createPaymentDTO.billingData.state,
+              country: createPaymentDTO.billingData.country,
+              postal_code: createPaymentDTO.billingData.postalCode,
+            } : undefined,
 
-            // customer: {
-            //   first_name: 'test',
-            //   last_name: 'testing',
-            //   email: 'AmmarSadek@gmail.com',
-            //   extras: {
-            //     re: '22',
-            //   },
-            // },
+            customer: createPaymentDTO.shippingData ? {
+              first_name: createPaymentDTO.shippingData.firstName,
+              last_name: createPaymentDTO.shippingData.lastName,
+              email: createPaymentDTO.shippingData.email,
+              phone_number: createPaymentDTO.shippingData.phoneNumber,
+              street: createPaymentDTO.shippingData.street,
+              building: createPaymentDTO.shippingData.building,
+              floor: createPaymentDTO.shippingData.floor,
+              apartment: createPaymentDTO.shippingData.apartment,
+              city: createPaymentDTO.shippingData.city,
+              state: createPaymentDTO.shippingData.state,
+              country: createPaymentDTO.shippingData.country,
+              postal_code: createPaymentDTO.shippingData.postalCode,
+            } : undefined,
             extras: {
               ee: 22,
             },
@@ -69,7 +83,6 @@ class PaymobProvider implements PaymentProvider {
       console.log(this.generatePaymentURL(response!.data.client_secret));
 
       return response.data;
-    
     } catch (error) {
       console.error('Error generating payment intention:', error);
     }
@@ -81,11 +94,7 @@ class PaymobProvider implements PaymentProvider {
     throw new Error('Method not implemented.');
   }
 
-
-
   private generatePaymentURL(clientSecret: string): String {
     return `${process.env.PAYMOB_PAYMENT_URL}?publicKey=${process.env.PAYMOB_PUBLIC_KEY_TEST}&clientSecret=${clientSecret}`;
   }
 }
-
-export { PaymobProvider };

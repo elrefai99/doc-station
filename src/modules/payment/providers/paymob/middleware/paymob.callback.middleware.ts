@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { IPaymobCallback } from '../paymob.callback.types';
+import { IPaymobCallback } from '../types/paymob.callback.types';
 import { Request, Response, NextFunction } from 'express';
 
 export const callbaclPaymobMiddleware = (req: Request, res: Response, next: NextFunction) => {

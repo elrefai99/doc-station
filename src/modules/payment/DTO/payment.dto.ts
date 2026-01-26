@@ -1,8 +1,25 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsBoolean, IsObject } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, IsObject, IsArray } from 'class-validator';
+import { PaymentProviderType } from '../../../Common/enum';
 
-export enum PaymentProviderType {
-  PAYMOB = 'paymob',
-  PAYFORT = 'payfort',
+
+
+// Item DTO
+export class PaymentItemDTO {
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  amount: number;
+
+  @IsString()
+  description: string;
+
+  @IsNumber()
+  quantity: number;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
 }
 
 // DTO for creating a payment
@@ -19,6 +36,10 @@ export class CreatePaymentDTO {
   @IsString()
   @IsOptional()
   currency?: string;
+
+  @IsArray()
+  @IsOptional()
+  items?: PaymentItemDTO[];
 
   @IsString()
   @IsOptional()
@@ -57,6 +78,10 @@ export class CreatePaymentDTO {
     country: string;
     postalCode?: string;
   };
+
+  @IsString()
+  @IsOptional()
+  special_reference?: string;
 
   @IsString()
   @IsOptional()
@@ -106,32 +131,6 @@ export interface VerifyResult {
   amount?: number;
   currency?: string;
   status?: string;
-  message?: string;
-  data?: any;
-}
-
-// DTO for refunding a payment
-export class RefundDTO {
-  @IsString()
-  transactionId: string;
-
-  @IsEnum(PaymentProviderType)
-  provider: PaymentProviderType;
-
-  @IsNumber()
-  amount: number;
-
-  @IsString()
-  @IsOptional()
-  reason?: string;
-}
-
-// Result returned after refunding a payment
-export interface RefundResult {
-  success: boolean;
-  refundId: string;
-  transactionId: string;
-  amount: number;
   message?: string;
   data?: any;
 }

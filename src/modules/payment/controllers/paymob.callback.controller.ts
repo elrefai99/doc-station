@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../../../utils/asyncHandler.utils';
-import { PaymobProvider } from '../providers/paymob/paymob.service';
+import {  PaymobProvider } from '../providers/paymob/paymob.service';
 // import { IPaymobCallback } from '../providers/paymob/paymob.callback.types';
 // import crypto from 'crypto';
 
@@ -10,7 +10,8 @@ export const PaymobCallbackController = asyncHandler(async (req: Request, res: R
 
   console.log(req.headers);
 
-  PaymobProvider.verifyPayment(req.body as any);
+  const paymobProvider = new PaymobProvider();
+  paymobProvider.verifyPayment( );
 
 
 
