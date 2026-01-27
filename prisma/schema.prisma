@@ -191,7 +191,7 @@ model Booking {
   updatedAt DateTime      @updatedAt
   doctor    User?         @relation("DoctorBookings", fields: [doctorId], references: [id])
   patient   User?         @relation("PatientBookings", fields: [patientId], references: [id])
-  orders    Order[]
+  orders    Order[]       
   rooms     rooms[]
 }
 
@@ -202,8 +202,8 @@ model Order {
   bookingId             Int?
   productId             Int?
   status                OrderStatus @default(PENDING)
-  idBooking             Boolean     @default(false)
-  idProduct             Boolean     @default(false)
+  isBooking             Boolean     @default(false)
+  isProduct             Boolean     @default(false)
   date                  String      @db.VarChar(255)
   time                  String      @db.VarChar(255)
   price                 Int
@@ -226,46 +226,46 @@ model Order {
   product  Products?  @relation(fields: [productId], references: [id])
   user     User?      @relation(fields: [userId], references: [id])
   userId   Int?
-  payments Payment[]
+ // payments Payment[]
 }
 
-model Payment {
-  id                     Int            @id @unique @default(autoincrement())
-  orderId                Int
-  transactionId          String         @unique @db.VarChar(255)
-  provider               PaymentProvider
-  amount                 Int
-  currency               String         @default("EGP") @db.VarChar(10)
-  status                 PaymentStatus  @default(PENDING)
-  paymentMethod          String?        @db.VarChar(100)
-  cardNumber             String?        @db.VarChar(50)
-  cardType               String?        @db.VarChar(50)
-  isRefunded             Boolean        @default(false)
-  isVoided               Boolean        @default(false)
-  is3dSecure             Boolean        @default(false)
-  merchantReference      String?        @db.VarChar(255)
-  gatewayResponse        Json?
-  gatewayResponseCode    String?        @db.VarChar(50)
-  gatewayResponseMessage String?        @db.Text
-  hmacSignature          String?        @db.VarChar(255)
-  billingData            Json?
-  shippingData           Json?
-  successUrl             String?        @db.Text
-  errorMessage           String?        @db.Text
-  refundedAmount         Int            @default(0)
-  refundedAt             DateTime?
-  paidAt                 DateTime?
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
+// model Payment {
+//   id                     Int            @id @unique @default(autoincrement())
+//   orderId                Int
+//   transactionId          String         @unique @db.VarChar(255)
+//   provider               PaymentProvider
+//   amount                 Int
+//   currency               String         @default("EGP") @db.VarChar(10)
+//   status                 PaymentStatus  @default(PENDING)
+//   paymentMethod          String?        @db.VarChar(100)
+//   cardNumber             String?        @db.VarChar(50)
+//   cardType               String?        @db.VarChar(50)
+//   isRefunded             Boolean        @default(false)
+//   isVoided               Boolean        @default(false)
+//   is3dSecure             Boolean        @default(false)
+//   merchantReference      String?        @db.VarChar(255)
+//   gatewayResponse        Json?
+//   gatewayResponseCode    String?        @db.VarChar(50)
+//   gatewayResponseMessage String?        @db.Text
+//   hmacSignature          String?        @db.VarChar(255)
+//   billingData            Json?
+//   shippingData           Json?
+//   successUrl             String?        @db.Text
+//   errorMessage           String?        @db.Text
+//   refundedAmount         Int            @default(0)
+//   refundedAt             DateTime?
+//   paidAt                 DateTime?
+//   createdAt              DateTime       @default(now())
+//   updatedAt              DateTime       @updatedAt
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+//   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  @@index([orderId])
-  @@index([transactionId])
-  @@index([provider])
-  @@index([status])
-  @@index([createdAt])
-}
+//   @@index([orderId])
+//   @@index([transactionId])
+//   @@index([provider])
+//   @@index([status])
+//   @@index([createdAt])
+// }
 
 model notification {
   id        Int      @id @unique @default(autoincrement())

@@ -1,3 +1,6 @@
+import { CreatePaymentDTO, VerifyPaymentDTO } from "../DTO/payment.dto";
+
+
 export interface PaymentProvider {
   createPayment(data: CreatePaymentDTO): Promise<PaymentResult>;
   verifyPayment(data: VerifyPaymentDTO): Promise<VerifyResult>;
