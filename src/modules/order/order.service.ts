@@ -1,11 +1,14 @@
 import { Order } from './../../generated/prisma/index.d';
 import prisma from '../../config/prisma';
-import { OrderStatus } from '../../Common/enum';
+import { OrderStatus, PaymentProviderType } from '../../Common/enum';
 import ServerError from '../../utils/api.errors.utils';
 import { Booking } from '../../generated/prisma/index.d';
+import { PaymentService } from '../payment/payment.service';
+import { PaymentFactory } from '../payment/payment.factory';
 interface PlaceOrderInput {
   bookingId: number;
   patientId: number;
+  payment_getway: PaymentProviderType;
 }
 
 export class OrderService {
@@ -47,6 +50,30 @@ export class OrderService {
       //     };
       //   }
 
+
+
+
+      const paymentService = new PaymentService(PaymentFactory.getProvider(orderDetails.payment_getway));
+
+      const paymnetResponse =await paymentService.createPayment({
+      amount: booking.price,
+      currency: 'EGP',
+      orderId: 0, // Temporary, will be updated after order creation
+      provider: orderDetails.payment_getway,
+      items: [
+        {
+          name: `Booking Payment for Booking ID: ${booking.id}`,
+          amount: booking.price,
+          description: `Payment for booking on ${booking.date} at ${booking.time}`,
+          quantity: 1,
+        },
+      ],
+    });
+    
+    console.log(paymnetResponse);
+
+
+
       // Create order for the booking
       const order = await prisma.order.create({
         data: {
@@ -60,6 +87,7 @@ export class OrderService {
           time: booking.time,
           price: booking.price,
           currencies: 'EGP',
+          payment_getway: orderDetails.payment_getway,
         },
         include: {
           booking: true,
@@ -81,6 +109,8 @@ export class OrderService {
           },
         },
       });
+
+      
 
       const response = await prisma.booking.update({
         where: { id: booking.id },

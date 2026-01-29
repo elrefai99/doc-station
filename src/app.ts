@@ -5,6 +5,7 @@ import * as http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { setupSwagger } from './swagger';
 import { OrderService } from './modules/order/order.service';
+import { PaymentProviderType } from './Common/enum';
 // import { PaymentService } from './modules/payment/payment.service';
 // // import { paymentService } from './modules/payment/shared/paymob.service';
 // import { PaymentFactory } from './modules/payment/payment.factory';
@@ -42,6 +43,7 @@ const createOrder = new OrderService();
 createOrder.placeOrder({
   bookingId: 12,
   patientId: 1,
+  payment_getway:PaymentProviderType.PAYMOB
 });
 
 // paymentService.generateIntention();
