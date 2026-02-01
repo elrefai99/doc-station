@@ -1,7 +1,54 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsObject, IsArray } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, IsObject, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { PaymentProviderType } from '../../../Common/enum';
 
+// Billing Data DTO
+export class BillingDataDTO {
+  @IsString()
+  firstName: string;
 
+  @IsString()
+  lastName: string;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  phoneNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  street?: string;
+
+  @IsString()
+  @IsOptional()
+  building?: string;
+
+  @IsString()
+  @IsOptional()
+  floor?: string;
+
+  @IsString()
+  @IsOptional()
+  apartment?: string;
+
+  @IsString()
+  @IsOptional()
+  city?: string;
+
+  @IsString()
+  @IsOptional()
+  state?: string;
+
+  @IsString()
+  @IsOptional()
+  country?: string;
+
+  @IsString()
+  @IsOptional()
+  postalCode?: string;
+}
 
 // Item DTO
 export class PaymentItemDTO {
@@ -45,39 +92,15 @@ export class CreatePaymentDTO {
   @IsOptional()
   merchantReference?: string;
 
-  @IsObject()
+  @ValidateNested()
+  @Type(() => BillingDataDTO)
   @IsOptional()
-  billingData?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    street: string;
-    building?: string;
-    floor?: string;
-    apartment?: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode?: string;
-  };
+  billingData?: BillingDataDTO;
 
-  @IsObject()
+  @ValidateNested()
+  @Type(() => BillingDataDTO)
   @IsOptional()
-  shippingData?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    street: string;
-    building?: string;
-    floor?: string;
-    apartment?: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode?: string;
-  };
+  shippingData?: BillingDataDTO;
 
   @IsString()
   @IsOptional()

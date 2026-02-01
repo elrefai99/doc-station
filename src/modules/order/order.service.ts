@@ -2,7 +2,6 @@ import { Order } from './../../generated/prisma/index.d';
 import prisma from '../../config/prisma';
 import { OrderStatus, PaymentProviderType } from '../../Common/enum';
 import ServerError from '../../utils/api.errors.utils';
-import { Booking } from '../../generated/prisma/index.d';
 import { PaymentService } from '../payment/payment.service';
 import { PaymentFactory } from '../payment/payment.factory';
 interface PlaceOrderInput {
@@ -17,7 +16,7 @@ export class OrderService {
       const { bookingId, patientId } = orderDetails;
 
       // Fetch booking details with doctor and patient information
-      const booking: Booking | null = await prisma.booking.findUnique({
+      const booking = await prisma.booking.findUnique({
         where: { id: bookingId },
         include: {
           doctor: true,
@@ -28,6 +27,10 @@ export class OrderService {
       console.log('Booking Details:', booking);
       if (!booking) {
         throw new ServerError('Booking not found', 404);
+      }
+
+      if (!booking.patient) {
+        throw new ServerError('Patient information not found', 404);
       }
 
       // Check if booking belongs to the patient
@@ -50,29 +53,30 @@ export class OrderService {
       //     };
       //   }
 
-
-
-
       const paymentService = new PaymentService(PaymentFactory.getProvider(orderDetails.payment_getway));
 
-      const paymnetResponse =await paymentService.createPayment({
-      amount: booking.price,
-      currency: 'EGP',
-      orderId: 0, // Temporary, will be updated after order creation
-      provider: orderDetails.payment_getway,
-      items: [
-        {
-          name: `Booking Payment for Booking ID: ${booking.id}`,
-          amount: booking.price,
-          description: `Payment for booking on ${booking.date} at ${booking.time}`,
-          quantity: 1,
+      const paymnetResponse = await paymentService.createPayment({
+        amount: booking.price,
+        currency: 'EGP',
+        orderId: 0, // Temporary, will be updated after order creation
+        provider: orderDetails.payment_getway,
+        items: [
+          {
+            name: `Booking Payment for Booking ID: ${booking.id}`,
+            amount: booking.price,
+            description: `Payment for booking on ${booking.date} at ${booking.time}`,
+            quantity: 1,
+          },
+        ],
+        billingData: {
+          firstName: booking.patient.fullname.split(' ')[0],
+          lastName: booking.patient.fullname.split(' ')[1] || '',
+          email: booking.patient.email,
+          phoneNumber: booking.patient.phone || undefined,
         },
-      ],
-    });
-    
-    console.log(paymnetResponse);
+      });
 
-
+      console.log(paymnetResponse);
 
       // Create order for the booking
       const order = await prisma.order.create({
@@ -110,14 +114,13 @@ export class OrderService {
         },
       });
 
-      
-
-      const response = await prisma.booking.update({
+      //const response =
+      await prisma.booking.update({
         where: { id: booking.id },
         data: { orders: { connect: { id: order.id } } },
         include: { orders: true },
       });
-      console.log('Updated Booking with Order:', response);
+      //console.log('Updated Booking with Order:', response);
       return {
         ...order,
         message: 'Order placed successfully',
