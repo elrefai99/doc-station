@@ -69,8 +69,8 @@ export class OrderService {
           },
         ],
         billingData: {
-          firstName: booking.patient.fullname.split(' ')[0],
-          lastName: booking.patient.fullname.split(' ')[1] || '',
+          firstName: booking.patient.fullname,
+          lastName: booking.patient.fullname,
           email: booking.patient.email,
           phoneNumber: booking.patient.phone || undefined,
         },

@@ -1,8 +1,7 @@
-import { CreatePaymentDTO, VerifyPaymentDTO } from "../DTO/payment.dto";
+import { ICreatePayment, IVerifyPayment, IPaymentResult, IVerifyResult } from '../DTO/payment.types';
 
-
-export interface PaymentProvider {
-  createPayment(data: CreatePaymentDTO): Promise<PaymentResult>;
-  verifyPayment(data: VerifyPaymentDTO): Promise<VerifyResult>;
-  refundPayment?(data: RefundDTO): Promise<RefundResult>;
+export interface IPaymentProvider {
+  createPayment(data: ICreatePayment): Promise<IPaymentResult>;
+  verifyPayment(data: IVerifyPayment): Promise<IVerifyResult>;
+  //refundPayment?(data: RefundDTO): Promise<RefundResult>;
 }

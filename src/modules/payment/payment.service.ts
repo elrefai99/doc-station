@@ -1,14 +1,14 @@
-import { PaymentProvider } from './interfaces/PaymentProvider';
-import { CreatePaymentDTO, VerifyPaymentDTO } from './DTO/payment.dto';
+import { IPaymentProvider } from './interfaces/PaymentProvider';
+import { ICreatePayment, IVerifyPayment } from './DTO/payment.types';
 
 export class PaymentService {
-  constructor(private provider: PaymentProvider) {}
+  constructor(private provider: IPaymentProvider) {}
 
-  createPayment(data: CreatePaymentDTO) {
+  createPayment(data: ICreatePayment) {
     return this.provider.createPayment(data);
   }
 
-  verifyPayment(data: VerifyPaymentDTO) {
+  verifyPayment(data: IVerifyPayment) {
     return this.provider.verifyPayment(data);
   }
 }

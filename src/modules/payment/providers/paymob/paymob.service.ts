@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { PaymobIntentionResponse } from './types/paymob.intention.types';
-import { PaymentProvider } from '../../interfaces/PaymentProvider';
-import { CreatePaymentDTO } from '../../DTO/payment.dto';
+import { IPaymentProvider } from '../../interfaces/PaymentProvider';
+import { ICreatePayment, IPaymentResult, IVerifyResult } from '../../DTO/payment.types';
 
-export class PaymobProvider implements PaymentProvider {
+export class PaymobProvider implements IPaymentProvider {
   constructor() {}
 
-  async createPayment(createPaymentDTO: CreatePaymentDTO): Promise<PaymobIntentionResponse | null> {
+  async createPayment(createPaymentDTO: ICreatePayment): Promise<IPaymentResult> {
     try {
       const response = await axios
 
@@ -16,12 +16,12 @@ export class PaymobProvider implements PaymentProvider {
             amount: createPaymentDTO.amount * 100, // Paymob expects amount in the smallest currency unit
             currency: createPaymentDTO.currency || 'EGP',
             payment_methods: ['pbe test card'],
-            items: createPaymentDTO.items?.map(item => ({
+            items: createPaymentDTO.items?.map((item) => ({
               name: item.name,
               amount: item.amount * 100, // Convert to cents
               description: item.description,
               quantity: item.quantity,
-              ...(item.image && { image: item.image })
+              ...(item.image && { image: item.image }),
             })) || [
               {
                 name: 'Default Item',
@@ -30,35 +30,39 @@ export class PaymobProvider implements PaymentProvider {
                 quantity: 1,
               },
             ],
-            billing_data: createPaymentDTO.billingData ? {
-              first_name: createPaymentDTO.billingData.firstName,
-              last_name: createPaymentDTO.billingData.lastName,
-              email: createPaymentDTO.billingData.email,
-              phone_number: createPaymentDTO.billingData.phoneNumber,
-              street: createPaymentDTO.billingData.street,
-              building: createPaymentDTO.billingData.building,
-              floor: createPaymentDTO.billingData.floor,
-              apartment: createPaymentDTO.billingData.apartment,
-              city: createPaymentDTO.billingData.city,
-              state: createPaymentDTO.billingData.state,
-              country: createPaymentDTO.billingData.country,
-              postal_code: createPaymentDTO.billingData.postalCode,
-            } : undefined,
+            billing_data: createPaymentDTO.billingData
+              ? {
+                  first_name: createPaymentDTO.billingData.firstName,
+                  last_name: createPaymentDTO.billingData.lastName,
+                  email: createPaymentDTO.billingData.email,
+                  phone_number: createPaymentDTO.billingData.phoneNumber,
+                  street: createPaymentDTO.billingData.street,
+                  building: createPaymentDTO.billingData.building,
+                  floor: createPaymentDTO.billingData.floor,
+                  apartment: createPaymentDTO.billingData.apartment,
+                  city: createPaymentDTO.billingData.city,
+                  state: createPaymentDTO.billingData.state,
+                  country: createPaymentDTO.billingData.country,
+                  postal_code: createPaymentDTO.billingData.postalCode,
+                }
+              : undefined,
 
-            customer: createPaymentDTO.shippingData ? {
-              first_name: createPaymentDTO.shippingData.firstName,
-              last_name: createPaymentDTO.shippingData.lastName,
-              email: createPaymentDTO.shippingData.email,
-              phone_number: createPaymentDTO.shippingData.phoneNumber,
-              street: createPaymentDTO.shippingData.street,
-              building: createPaymentDTO.shippingData.building,
-              floor: createPaymentDTO.shippingData.floor,
-              apartment: createPaymentDTO.shippingData.apartment,
-              city: createPaymentDTO.shippingData.city,
-              state: createPaymentDTO.shippingData.state,
-              country: createPaymentDTO.shippingData.country,
-              postal_code: createPaymentDTO.shippingData.postalCode,
-            } : undefined,
+            customer: createPaymentDTO.shippingData
+              ? {
+                  first_name: createPaymentDTO.shippingData.firstName,
+                  last_name: createPaymentDTO.shippingData.lastName,
+                  email: createPaymentDTO.shippingData.email,
+                  phone_number: createPaymentDTO.shippingData.phoneNumber,
+                  street: createPaymentDTO.shippingData.street,
+                  building: createPaymentDTO.shippingData.building,
+                  floor: createPaymentDTO.shippingData.floor,
+                  apartment: createPaymentDTO.shippingData.apartment,
+                  city: createPaymentDTO.shippingData.city,
+                  state: createPaymentDTO.shippingData.state,
+                  country: createPaymentDTO.shippingData.country,
+                  postal_code: createPaymentDTO.shippingData.postalCode,
+                }
+              : undefined,
             extras: {
               ee: 22,
             },
@@ -80,21 +84,32 @@ export class PaymobProvider implements PaymentProvider {
         });
       console.log('Payment Intention Response:', response);
 
-      console.log(this.generatePaymentURL(response!.data.client_secret));
+      const paymentUrl = this.generatePaymentURL(response.data.client_secret);
+      console.log(paymentUrl);
 
-      return response.data;
+      return {
+        success: true,
+        transactionId: response.data.id,
+        paymentUrl,
+        clientSecret: response.data.client_secret,
+        data: response.data,
+      };
     } catch (error) {
       console.error('Error generating payment intention:', error);
+      return {
+        success: false,
+        transactionId: '',
+        message: error instanceof Error ? error.message : 'Failed to create payment',
+      };
     }
-    return null;
   }
 
-  async verifyPayment(): Promise<any> {
+  async verifyPayment(): Promise<IVerifyResult> {
     // TODO: Implement payment verification logic
     throw new Error('Method not implemented.');
   }
 
-  private generatePaymentURL(clientSecret: string): String {
+  private generatePaymentURL(clientSecret: string): string {
     return `${process.env.PAYMOB_PAYMENT_URL}?publicKey=${process.env.PAYMOB_PUBLIC_KEY_TEST}&clientSecret=${clientSecret}`;
   }
 }
