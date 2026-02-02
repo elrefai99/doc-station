@@ -33,7 +33,7 @@ export interface ICreatePayment {
   currency?: string;
   items?: IPaymentItem[];
   merchantReference?: string;
-  billingData?: IBillingData;
+  billingData: IBillingData;
   shippingData?: IBillingData;
   special_reference?: string;
   successUrl?: string;
@@ -49,6 +49,19 @@ export interface IPaymentResult {
   clientSecret?: string;
   message?: string;
   data?: any;
+  // Order schema fields
+  orderId?: number;
+  status?: string;
+  price?: number;
+  currencies?: string;
+  cardNumber?: string;
+  methodPayment?: string;
+  paymentType?: string;
+  paymentGateway?: string;
+  paymentGatewayStatus?: string;
+  paymentGatewayCode?: string;
+  dataMessage?: string;
+  hmacSignature?: string;
 }
 
 // Verify payment data

@@ -1,4 +1,4 @@
-import { ICreatePayment, IVerifyPayment, IPaymentResult, IVerifyResult } from '../DTO/payment.types';
+import { ICreatePayment, IVerifyPayment, IPaymentResult, IVerifyResult } from './payment.types';
 
 export interface IPaymentProvider {
   createPayment(data: ICreatePayment): Promise<IPaymentResult>;

@@ -1,22 +1,23 @@
 import axios from 'axios';
 import { PaymobIntentionResponse } from './types/paymob.intention.types';
-import { IPaymentProvider } from '../../interfaces/PaymentProvider';
-import { ICreatePayment, IPaymentResult, IVerifyResult } from '../../DTO/payment.types';
+import { IPaymentProvider } from '../../types/PaymentProvider';
+import { ICreatePayment, IPaymentResult, IVerifyResult } from '../../types/payment.types';
+import { OrderStatus, PaymentProviderType } from '../../../../Common/enum';
 
 export class PaymobProvider implements IPaymentProvider {
   constructor() {}
 
-  async createPayment(createPaymentDTO: ICreatePayment): Promise<IPaymentResult> {
+  async createPayment(createPaymentData: ICreatePayment): Promise<IPaymentResult> {
     try {
       const response = await axios
 
         .post<PaymobIntentionResponse>(
           process.env.PAYMOB_API_INTENTION as string,
           {
-            amount: createPaymentDTO.amount * 100, // Paymob expects amount in the smallest currency unit
-            currency: createPaymentDTO.currency || 'EGP',
+            amount: createPaymentData.amount * 100, // Paymob expects amount in the smallest currency unit
+            currency: createPaymentData.currency || 'EGP',
             payment_methods: ['pbe test card'],
-            items: createPaymentDTO.items?.map((item) => ({
+            items: createPaymentData.items?.map((item) => ({
               name: item.name,
               amount: item.amount * 100, // Convert to cents
               description: item.description,
@@ -25,42 +26,42 @@ export class PaymobProvider implements IPaymentProvider {
             })) || [
               {
                 name: 'Default Item',
-                amount: createPaymentDTO.amount * 100,
+                amount: createPaymentData.amount * 100,
                 description: 'Payment item',
                 quantity: 1,
               },
             ],
-            billing_data: createPaymentDTO.billingData
+            billing_data: createPaymentData.billingData
               ? {
-                  first_name: createPaymentDTO.billingData.firstName,
-                  last_name: createPaymentDTO.billingData.lastName,
-                  email: createPaymentDTO.billingData.email,
-                  phone_number: createPaymentDTO.billingData.phoneNumber,
-                  street: createPaymentDTO.billingData.street,
-                  building: createPaymentDTO.billingData.building,
-                  floor: createPaymentDTO.billingData.floor,
-                  apartment: createPaymentDTO.billingData.apartment,
-                  city: createPaymentDTO.billingData.city,
-                  state: createPaymentDTO.billingData.state,
-                  country: createPaymentDTO.billingData.country,
-                  postal_code: createPaymentDTO.billingData.postalCode,
+                  first_name: createPaymentData.billingData.firstName,
+                  last_name: createPaymentData.billingData.lastName,
+                  email: createPaymentData.billingData.email,
+                  phone_number: createPaymentData.billingData.phoneNumber,
+                  street: createPaymentData.billingData.street,
+                  building: createPaymentData.billingData.building,
+                  floor: createPaymentData.billingData.floor,
+                  apartment: createPaymentData.billingData.apartment,
+                  city: createPaymentData.billingData.city,
+                  state: createPaymentData.billingData.state,
+                  country: createPaymentData.billingData.country,
+                  postal_code: createPaymentData.billingData.postalCode,
                 }
               : undefined,
 
-            customer: createPaymentDTO.shippingData
+            customer: createPaymentData.shippingData
               ? {
-                  first_name: createPaymentDTO.shippingData.firstName,
-                  last_name: createPaymentDTO.shippingData.lastName,
-                  email: createPaymentDTO.shippingData.email,
-                  phone_number: createPaymentDTO.shippingData.phoneNumber,
-                  street: createPaymentDTO.shippingData.street,
-                  building: createPaymentDTO.shippingData.building,
-                  floor: createPaymentDTO.shippingData.floor,
-                  apartment: createPaymentDTO.shippingData.apartment,
-                  city: createPaymentDTO.shippingData.city,
-                  state: createPaymentDTO.shippingData.state,
-                  country: createPaymentDTO.shippingData.country,
-                  postal_code: createPaymentDTO.shippingData.postalCode,
+                  first_name: createPaymentData.shippingData.firstName,
+                  last_name: createPaymentData.shippingData.lastName,
+                  email: createPaymentData.shippingData.email,
+                  phone_number: createPaymentData.shippingData.phoneNumber,
+                  street: createPaymentData.shippingData.street,
+                  building: createPaymentData.shippingData.building,
+                  floor: createPaymentData.shippingData.floor,
+                  apartment: createPaymentData.shippingData.apartment,
+                  city: createPaymentData.shippingData.city,
+                  state: createPaymentData.shippingData.state,
+                  country: createPaymentData.shippingData.country,
+                  postal_code: createPaymentData.shippingData.postalCode,
                 }
               : undefined,
             extras: {
@@ -93,6 +94,15 @@ export class PaymobProvider implements IPaymentProvider {
         paymentUrl,
         clientSecret: response.data.client_secret,
         data: response.data,
+        // Order schema fields
+        orderId: createPaymentData.orderId,
+        status: OrderStatus.PENDING,
+        price: createPaymentData.amount,
+        currencies: createPaymentData.currency || 'EGP',
+        paymentGateway: PaymentProviderType.PAYMOB,
+        paymentGatewayStatus: response.data.status,
+        methodPayment: response.data.payment_methods?.[0]?.method_type,
+        paymentType: response.data.payment_methods?.[0]?.name,
       };
     } catch (error) {
       console.error('Error generating payment intention:', error);

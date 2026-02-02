@@ -1,5 +1,5 @@
-import { IPaymentProvider } from './interfaces/PaymentProvider';
-import { ICreatePayment, IVerifyPayment } from './DTO/payment.types';
+import { IPaymentProvider } from './types/PaymentProvider';
+import { ICreatePayment, IVerifyPayment } from './types/payment.types';
 
 export class PaymentService {
   constructor(private provider: IPaymentProvider) {}

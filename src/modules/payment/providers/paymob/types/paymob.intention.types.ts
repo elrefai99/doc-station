@@ -1,4 +1,4 @@
-export interface PaymentKey {
+ interface PaymentKey {
   integration: number;
   key: string;
   gateway_type: string;
@@ -8,7 +8,7 @@ export interface PaymentKey {
   save_card: boolean;
 }
 
-export interface IntentionDetailItem {
+ interface IntentionDetailItem {
   name: string;
   amount: number;
   description: string;
@@ -16,7 +16,7 @@ export interface IntentionDetailItem {
   image: string | null;
 }
 
-export interface BillingData {
+ interface BillingData {
   apartment: string;
   floor: string;
   first_name: string;
@@ -32,14 +32,14 @@ export interface BillingData {
   postal_code: string;
 }
 
-export interface IntentionDetail {
+ interface IntentionDetail {
   amount: number;
   items: IntentionDetailItem[];
   currency: string;
   billing_data: BillingData;
 }
 
-export interface PaymentMethod {
+interface PaymentMethod {
   integration_id: number;
   alias: string | null;
   name: string;
@@ -49,13 +49,13 @@ export interface PaymentMethod {
   use_cvc_with_moto: boolean;
 }
 
-export interface CreationExtras {
+ interface CreationExtras {
   ee?: number;
   merchant_order_id: string | null;
   [key: string]: any;
 }
 
-export interface Extras {
+ interface Extras {
   creation_extras: CreationExtras;
   confirmation_extras: string | Record<string, any> | null;
 }

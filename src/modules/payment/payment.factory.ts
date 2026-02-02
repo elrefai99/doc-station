@@ -1,5 +1,5 @@
 import { PaymentProviderType } from '../../Common/enum';
-import { IPaymentProvider } from './interfaces/PaymentProvider';
+import { IPaymentProvider } from './types/PaymentProvider';
 import { PaymobProvider } from './providers/paymob/paymob.service';
 //import { PayfortProvider } from './providers/payfort/payfort.provider';
 
