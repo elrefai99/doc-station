@@ -1,16 +1,16 @@
 import { Job } from "bullmq";
-import { sendgridFunction } from "../shared/sendGrid.shared";
+import { nodemailerFunction } from "../shared/nodemailer";
 
 export const sendEmail = async (data: any) => {
      switch (data.type) {
           case "login":
-               await sendgridFunction(data.email, data.html, data.subject)
+               await nodemailerFunction(data.email, data.html, data.subject)
                break;
           case "otp":
-               await sendgridFunction(data.email, data.html, data.subject)
+               await nodemailerFunction(data.email, data.html, data.subject)
                break;
           case "NewBooking":
-               await sendgridFunction(data.email, data.html, data.subject)
+               await nodemailerFunction(data.email, data.html, data.subject)
                break;
           default:
                break;

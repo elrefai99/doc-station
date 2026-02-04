@@ -8,9 +8,9 @@ WORKDIR /app
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
-COPY package*.json ./
-RUN npm install -f
-RUN npm install concurrently
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN npm install -g pnpm
+RUN pnpm install -f
 
 COPY . .
 
@@ -28,7 +28,8 @@ FROM node:22
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install -f
+RUN npm install -g pnpm
+RUN pnpm install -f
 RUN npm install -g pm2
 
 COPY --from=builder /app/dist ./dist
