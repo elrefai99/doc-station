@@ -27,7 +27,7 @@ setupSwagger(app);
 // Global error handler - returns JSON instead of HTML
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Error:', err.message);
-  res.status(500).json({
+  res.status((err as any).statusCode ?? 500).json({
     success: false,
     message: err.message || 'Internal server error',
   });
