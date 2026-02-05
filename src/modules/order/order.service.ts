@@ -90,6 +90,7 @@ export class OrderService {
           payment_getway_code: paymentResponse.paymentGatewayCode || '',
           data_message: paymentResponse.dataMessage || '',
           card_number: paymentResponse.cardNumber || '',
+          payment_url: paymentResponse.paymentUrl || '',
         },
         include: {
           booking: true,

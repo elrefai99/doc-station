@@ -215,6 +215,7 @@ model Order {
   payment_getway        String      @default("")
   payment_getway_status String      @default("")
   payment_getway_code   String      @default("")
+  payment_url           String      @default("")
   data_message          String      @default("")
   hmac_signature        String      @default("")
   createdAt             DateTime    @default(now())
