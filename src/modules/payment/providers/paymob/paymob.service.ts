@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { PaymobIntentionResponse } from './types/paymob.intention.types';
 import { IPaymentProvider } from '../../types/PaymentProvider';
-import { ICreatePayment, IPaymentResult, IVerifyResult } from '../../types/payment.types';
+import { ICreatePayment, IPaymentResult, IVerifyResult, IVerifyPayment } from '../../types/payment.types';
 import { OrderStatus, PaymentProviderType } from '../../../../Common/enum';
+import ServerError from '../../../../utils/api.errors.utils';
 
 export class PaymobProvider implements IPaymentProvider {
   constructor() {}
@@ -114,9 +115,19 @@ export class PaymobProvider implements IPaymentProvider {
     }
   }
 
-  async verifyPayment(): Promise<IVerifyResult> {
-    // TODO: Implement payment verification logic
-    throw new Error('Method not implemented.');
+  async verifyPayment(verifyPaymentData: IVerifyPayment): Promise<IVerifyResult> {
+    console.log('Verifying payment with data:', verifyPaymentData);
+
+    if (verifyPaymentData.callbackData?.obj.success !== true) {
+      throw new ServerError('Payment verification failed: Payment was not successful', 400);
+    }
+
+    return {
+      success: true,
+      verified: true,
+      transactionId: verifyPaymentData.transactionId,
+      message: 'Verification handled via webhook',
+    };
   }
 
   private generatePaymentURL(clientSecret: string): string {

@@ -83,3 +83,4 @@ export interface IVerifyResult {
   message?: string;
   data?: any;
 }
+

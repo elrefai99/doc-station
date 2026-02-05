@@ -13,25 +13,28 @@ interface PlaceOrderInput {
 
 export class OrderService {
   async placeOrder(orderDetails: PlaceOrderInput): Promise<Order & { message: string }> {
+    const { bookingId, patientId } = orderDetails;
+
+    // Step 1: Validate booking exists and belongs to patient
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        doctor: { select: { id: true, fullname: true, email: true, phone: true } },
+        patient: { select: { id: true, fullname: true, email: true, phone: true } },
+      },
+    });
+
+    if (!booking) throw new ServerError('Booking not found', 404);
+    if (!booking.patient) throw new ServerError('Patient information not found', 404);
+    if (!booking.doctorId) throw new ServerError('Doctor not found for this booking', 404);
+    if (booking.patientId !== patientId) throw new ServerError('Booking does not belong to this patient', 403);
+
+    // Step 2: Process payment
+    const paymentService = new PaymentService(PaymentFactory.getProvider(orderDetails.payment_getway));
+
+    let paymentResponse;
     try {
-      const { bookingId, patientId } = orderDetails;
-
-      const booking = await prisma.booking.findUnique({
-        where: { id: bookingId },
-        include: {
-          doctor: { select: { id: true, fullname: true, email: true, phone: true } },
-          patient: { select: { id: true, fullname: true, email: true, phone: true } },
-        },
-      });
-
-      if (!booking) throw new ServerError('Booking not found', 404);
-      if (!booking.patient) throw new ServerError('Patient information not found', 404);
-      if (!booking.doctorId) throw new ServerError('Doctor not found for this booking', 404);
-      if (booking.patientId !== patientId) throw new ServerError('Booking does not belong to this patient', 403);
-
-      const paymentService = new PaymentService(PaymentFactory.getProvider(orderDetails.payment_getway));
-
-      const paymentResponse = await paymentService.createPayment({
+      paymentResponse = await paymentService.createPayment({
         amount: booking.price,
         currency: 'EGP',
         orderId: 0,
@@ -51,12 +54,18 @@ export class OrderService {
           phoneNumber: booking.patient.phone || undefined,
         },
       });
+    } catch (paymentError) {
+      throw new ServerError('Payment processing failed. Please try again.', 502);
+    }
 
-      if (!paymentResponse.success) {
-        throw new ServerError(paymentResponse.message || 'Payment creation failed', 402);
-      }
+    if (!paymentResponse.success) {
+      throw new ServerError(paymentResponse.message || 'Payment creation failed', 402);
+    }
 
-      const order = await prisma.order.create({
+    // Step 3: Create order - wrapped in try-catch with payment info for potential refund
+    let order;
+    try {
+      order = await prisma.order.create({
         data: {
           patientId: patientId,
           doctorId: booking.doctorId,
@@ -84,14 +93,18 @@ export class OrderService {
           patient: { select: { id: true, fullname: true, email: true, phone: true } },
         },
       });
-
-      // tpo: send notification to doctor and patient about the new order
-
-      
-      return { ...order, message: 'Order placed successfully' };
-    } catch (error) {
-      if (error instanceof ServerError) throw error;
-      throw new ServerError('Failed to place order', 500);
+    } catch (orderError) {
+      throw new ServerError(
+        'Order creation failed after payment. Transaction ID: ' +
+          paymentResponse.transactionId +
+          '. Please contact support for refund.',
+        500,
+      );
     }
+
+    // Step 4: Send notification to doctor and patient about the new order
+    // TODO: Implement notification sending
+
+    return { ...order, message: 'Order placed successfully' };
   }
 }

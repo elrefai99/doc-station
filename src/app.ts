@@ -1,11 +1,11 @@
 import './config/dotenv.conf';
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import appConfig from './app.config';
 import * as http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import { setupSwagger } from './swagger';
-import { OrderService } from './modules/order/order.service';
-import { PaymentProviderType } from './Common/enum';
+// import { OrderService } from './modules/order/order.service';
+// import { PaymentProviderType } from './Common/enum';
 // import { PaymentService } from './modules/payment/payment.service';
 // // import { paymentService } from './modules/payment/shared/paymob.service';
 // import { PaymentFactory } from './modules/payment/payment.factory';
@@ -24,6 +24,15 @@ ioSocket = new SocketIOServer(server, {
 appConfig(app);
 setupSwagger(app);
 
+// Global error handler - returns JSON instead of HTML
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('Error:', err.message);
+  res.status(500).json({
+    success: false,
+    message: err.message || 'Internal server error',
+  });
+});
+
 app.use(async (_req: Request, res: Response) => {
   res.status(404).send('This is not the API route you are looking for');
 });
@@ -36,15 +45,16 @@ server.listen(PORT as string, () => {
   );
 });
 
-
-
-
-const createOrder = new OrderService();
-createOrder.placeOrder({
-  bookingId: 12,
-  patientId: 1,
-  payment_getway:PaymentProviderType.PAYMOB
-});
+// const createOrder = new OrderService();
+// createOrder.placeOrder({
+//   bookingId: 12,
+//   patientId: 1,
+//   payment_getway:PaymentProviderType.PAYMOB
+// }).then((order) => {
+//   console.log('Order placed successfully:', order);
+// }).catch((error) => {
+//   console.error('Error placing order:', error);
+// });
 
 // paymentService.generateIntention();
 // const testPayment = new PaymentService(PaymentFactory.getProvider(PaymentProviderType.PAYMOB));
@@ -97,10 +107,10 @@ createOrder.placeOrder({
 //     country: 'EGY',
 //     postalCode: '11511',
 //   },
-  // successUrl: 'https://example.com/payment/success',
-  // errorUrl: 'https://example.com/payment/error',
-  // metadata: {
-  //   customerId: 'CUST-12345',
-  //   orderNotes: 'Express delivery requested',
-  // },
+// successUrl: 'https://example.com/payment/success',
+// errorUrl: 'https://example.com/payment/error',
+// metadata: {
+//   customerId: 'CUST-12345',
+//   orderNotes: 'Express delivery requested',
+// },
 //});

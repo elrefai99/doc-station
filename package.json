@@ -39,6 +39,7 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-async-handler": "^1.2.0",
     "express-rate-limit": "^8.2.1",
     "express-useragent": "^2.0.2",
     "fs-extra": "^11.3.3",

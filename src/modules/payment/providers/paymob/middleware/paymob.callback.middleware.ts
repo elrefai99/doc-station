@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { IPaymobCallback } from '../types/paymob.callback.types';
 import { Request, Response, NextFunction } from 'express';
 
-export const callbaclPaymobMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const callbackPaymobMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const callbackData: IPaymobCallback = req.body;
     const { obj } = callbackData;
