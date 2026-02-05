@@ -71,7 +71,7 @@ export class PaymobProvider implements IPaymentProvider {
 
             //you creat it, and paymob will return it back to you in the webhook , must be unique
 
-            //special_reference: 'phe4sjw11q-1xxxxxxxxx',
+            special_reference: createPaymentData.special_reference || undefined,
           },
           {
             headers: {
@@ -116,19 +116,30 @@ export class PaymobProvider implements IPaymentProvider {
   }
 
   async verifyPayment(verifyPaymentData: IVerifyPayment): Promise<IVerifyResult> {
-    console.log('Verifying payment with data:', verifyPaymentData);
 
     if (verifyPaymentData.callbackData?.obj.success !== true) {
       throw new ServerError('Payment verification failed: Payment was not successful', 400);
     }
+
+    const callbackObj = verifyPaymentData.callbackData?.obj;
 
     return {
       success: true,
       verified: true,
       transactionId: verifyPaymentData.transactionId,
       message: 'Verification handled via webhook',
+      amountInCents: callbackObj?.amount_cents,
+      currency: callbackObj?.currency,
+      status: callbackObj?.pending ? OrderStatus.PENDING : OrderStatus.SUCCESS,
+      order_id: callbackObj?.order?.merchant_order_id,
+      rawData: verifyPaymentData.callbackData, // Keep raw data only for debugging
+      card_number:callbackObj.data.card_num || '',
+      hmacSignature: verifyPaymentData.hmacSignature || '',
     };
   }
+
+
+
 
   private generatePaymentURL(clientSecret: string): string {
     return `${process.env.PAYMOB_PAYMENT_URL}?publicKey=${process.env.PAYMOB_PUBLIC_KEY_TEST}&clientSecret=${clientSecret}`;

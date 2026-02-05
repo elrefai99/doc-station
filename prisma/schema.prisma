@@ -330,12 +330,12 @@ enum BookingStatus {
   REJECTED
 }
 
-enum OrderStatus {
-  PENDING
-  SUCCESS
-  REFUNDED
-  FAILED
-}
+  enum OrderStatus {
+    PENDING
+    SUCCESS
+    REFUNDED
+    FAILED
+  }
 
 enum PaymentProvider {
   PAYMOB

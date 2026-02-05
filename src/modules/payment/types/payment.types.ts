@@ -61,7 +61,6 @@ export interface IPaymentResult {
   paymentGatewayStatus?: string;
   paymentGatewayCode?: string;
   dataMessage?: string;
-  hmacSignature?: string;
 }
 
 // Verify payment data
@@ -76,11 +75,16 @@ export interface IVerifyPayment {
 export interface IVerifyResult {
   success: boolean;
   verified: boolean;
+  order_id: string;
   transactionId: string;
-  amount?: number;
+  amountInCents?: number;
   currency?: string;
   status?: string;
   message?: string;
-  data?: any;
-}
+  booking_id?: string;
+  card_number?: string;
+  hmacSignature?:string;
+  // Raw provider data - only use for logging/debugging, not for business logic
+  rawData?: any;
 
+}

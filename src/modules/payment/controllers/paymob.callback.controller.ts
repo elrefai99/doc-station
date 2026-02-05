@@ -2,51 +2,40 @@ import { Request, Response, RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import { PaymobProvider } from '../providers/paymob/paymob.service';
 import { PaymentProviderType } from '../../../Common/enum';
+import { OrderService } from '../../order/order.service';
 // import { IPaymobCallback } from '../providers/paymob/paymob.callback.types';
 // import crypto from 'crypto';
 
 export const PaymobCallbackController: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-  if (!req.body?.obj?.id) {
-    res.status(400).json({
-      success: false,
-      message: 'Invalid callback data: missing transaction ID',
-    });
-    return;
-  }
+  // implemnt the logic to handle the paymob callback here
+
+  console.log(req.query.hmac);
 
   const paymobProvider = new PaymobProvider();
-
-  const result = await paymobProvider.verifyPayment({
+  const verifiyResult = await paymobProvider.verifyPayment({
     transactionId: req.body.obj.id,
     provider: PaymentProviderType.PAYMOB,
-    hmacSignature: req.headers['x-paymob-hmac-sha256'] as string,
-    callbackData: req.body,
+    hmacSignature: req.query.hmac as string,
+    callbackData: req.body, // Callback data comes from the request body
   });
+  console.log('Verification Result:', verifiyResult);
 
-  if (!result.success) {
-    res.status(400).json({
-      success: false,
-      message: result.message || 'Payment verification failed',
-    });
-    return;
+  if (verifiyResult.success) {
+    if (verifiyResult.verified) {
+      const orderService = new OrderService();
+      orderService
+        .updateOrderAfterVerification(verifiyResult)
+        .then(() => {
+          console.log('Order payment status updated successfully');
+        })
+        .catch((err) => {
+          console.log('Error updating order payment status:', err);
+        });
+    }
   }
-
-  if (!result.verified) {
-    res.status(400).json({
-      success: false,
-      verified: false,
-      message: result.message || 'Payment was not successful',
-    });
-    return;
-  }
-
-  // TODO: Update order status in database here
-  // await prisma.order.update({ where: { Trnx_id: result.transactionId }, data: { status: OrderStatus.PAID } });
 
   res.status(200).json({
     success: true,
-    verified: true,
-    transactionId: result.transactionId,
-    message: 'Payment verified successfully',
+    message: 'payment verified successfully',
   });
 });
