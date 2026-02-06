@@ -52,7 +52,7 @@ export class OrderService {
       paymentResponse = await paymentService.createPayment({
         amount: booking.price,
         currency: 'EGP',
-        orderId: 0,
+        orderId: order.id,
         provider: orderDetails.payment_gateway,
         items: [
           {
