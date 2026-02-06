@@ -14,7 +14,7 @@ interface PlaceOrderInput {
 
 export class OrderService {
   async placeOrder(orderDetails: PlaceOrderInput): Promise<Order & { message: string }> {
-    const { bookingId, patientId } = orderDetails;
+    const { bookingId } = orderDetails;
 
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
@@ -27,11 +27,10 @@ export class OrderService {
     if (!booking) throw new ServerError('Booking not found', 404);
     if (!booking.patient) throw new ServerError('Patient information not found', 404);
     if (!booking.doctorId) throw new ServerError('Doctor not found for this booking', 404);
-    if (booking.patientId !== patientId) throw new ServerError('Booking does not belong to this patient', 403);
 
     let order = await prisma.order.create({
       data: {
-        patientId: patientId,
+        patientId: booking.patientId,
         doctorId: booking.doctorId,
         bookingId: booking.id,
         status: OrderStatus.PENDING,

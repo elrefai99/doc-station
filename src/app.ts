@@ -48,7 +48,6 @@ server.listen(PORT as string, () => {
 // const createOrder = new OrderService();
 // createOrder.placeOrder({
 //   bookingId: 12,
-//   patientId: 1,
 //   payment_getway:PaymentProviderType.PAYMOB
 // }).then((order) => {
 //   console.log('Order placed successfully:', order);
