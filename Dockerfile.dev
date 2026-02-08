@@ -5,10 +5,11 @@ WORKDIR /app
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN npm install -g pnpm
+RUN pnpm install
 
 COPY . .
 
 EXPOSE 9000
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev"]
