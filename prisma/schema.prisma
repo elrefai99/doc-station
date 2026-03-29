@@ -7,47 +7,40 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─── User ────────────────────────────────────────────────────────────────────
+
 model User {
-  id               Int               @id @unique @default(autoincrement())
-  fullname         String            @db.VarChar(255)
-  username         String            @unique @db.VarChar(255)
-  email            String            @db.VarChar(255)
-  password         String            @db.VarChar(255)
-  code             String            @default("") @db.VarChar(255)
-  phone            String            @default("") @db.VarChar(255)
-  address          String            @default("") @db.VarChar(255)
-  city             String            @default("") @db.VarChar(255)
-  state            String            @default("") @db.VarChar(255)
-  zip              String            @default("") @db.VarChar(255)
-  role             UserRole          @default(PATIENT)
-  status           UserStatus        @default(ACTIVE)
-  isVerified       Boolean           @default(false)
-  isActive         Boolean           @default(true)
-  isDeleted        Boolean           @default(false)
-  isArchived       Boolean           @default(false)
-  isSuspended      Boolean           @default(false)
-  isLocked         Boolean           @default(false)
-  isExpired        Boolean           @default(false)
-  isExpiring       Boolean           @default(false)
-  isExpiredSoon    Boolean           @default(false)
-  updatePAssword   DateTime          @default(now())
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  avatar           String            @default("") @db.VarChar(255)
-  Bio              String            @default("") @db.VarChar(255)
-  doctorBookings   Booking[]         @relation("DoctorBookings")
-  patientBookings  Booking[]         @relation("PatientBookings")
-  otps             OTP[]
-  medicalHistories medical_history[]
-  doctorProfiles   doctor_profile[]
-  doctorOrders     Order[]           @relation("DoctorOrders")
-  patientOrders    Order[]           @relation("PatientOrders")
-  orders           Order[]
-  notifications    notification[]
-  RoomsSender      rooms[]           @relation("RoomsSender")
-  RoomsReceiver    rooms[]           @relation("RoomsReceiver")
-  dmChatSender     dmChat[]          @relation("dmChatSender")
-  products         Products[]
+  id                Int             @id @unique @default(autoincrement())
+  fullname          String          @db.VarChar(255)
+  username          String          @unique @db.VarChar(255)
+  email             String          @unique @db.VarChar(255)
+  password          String          @db.VarChar(255)
+  code              String          @default("") @db.VarChar(10)
+  phone             String          @default("") @db.VarChar(20)
+  avatar            String          @default("") @db.VarChar(500)
+  bio               String          @default("") @db.VarChar(500)
+  role              UserRole        @default(PATIENT)
+  status            UserStatus      @default(INACTIVE)
+  isVerified        Boolean         @default(false)
+  updatedPasswordAt DateTime        @default(now())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  doctorBookings    Booking[]       @relation("DoctorBookings")
+  patientBookings   Booking[]       @relation("PatientBookings")
+  otps              OTP[]
+  medicalHistories  medical_history[]
+  doctorProfile     doctor_profile?
+  patientOrders     Order[]         @relation("PatientOrders")
+  notifications     notification[]
+  roomsSent         rooms[]         @relation("RoomsSender")
+  roomsReceived     rooms[]         @relation("RoomsReceiver")
+  dmChatsSent       dmChat[]        @relation("dmChatSender")
+  products          Products[]
+  reviewsGiven      Review[]        @relation("ReviewPatient")
+  reviewsReceived   Review[]        @relation("ReviewDoctor")
+  blogs             Blogs[]
 
   @@index([status])
   @@index([email])
@@ -55,25 +48,32 @@ model User {
   @@index([createdAt])
 }
 
+// ─── OTP ─────────────────────────────────────────────────────────────────────
+
 model OTP {
   id        Int       @id @unique @default(autoincrement())
   userId    Int?
   otp       Int
-  expire    String    @db.VarChar(255)
+  expire    DateTime
   status    OTPStatus @default(PENDING)
-  user      User?     @relation(fields: [userId], references: [id])
+  type      OTPType   @default(VERIFICATION)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
+// ─── Medical History ─────────────────────────────────────────────────────────
+
 model medical_history {
   id          Int      @id @unique @default(autoincrement())
   userId      Int
-  start_date  String   @db.VarChar(255)
-  images      String[] @db.VarChar(255)
-  description String   @db.VarChar(255)
+  title       String   @db.VarChar(255)
+  start_date  String   @db.VarChar(50)
+  images      String[] @db.VarChar(500)
+  description String   @db.VarChar(2000)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -82,28 +82,96 @@ model medical_history {
   @@index([userId])
 }
 
-model doctor_profile {
-  id            Int      @id @unique @default(autoincrement())
-  userId        Int
-  address       Json
-  governorateId Int
-  cityId        Int
-  timeStart     String   @db.VarChar(255)
-  timeEnd       String   @db.VarChar(255)
-  dateFrom      String   @db.VarChar(255)
-  dateTo        String   @db.VarChar(255)
-  price         Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+// ─── Specialization ──────────────────────────────────────────────────────────
 
-  user        User?        @relation(fields: [userId], references: [id])
-  governorate governorate? @relation(fields: [governorateId], references: [id])
-  city        city?        @relation(fields: [cityId], references: [id])
+model Specialization {
+  id        Int              @id @unique @default(autoincrement())
+  name_ar   String           @db.VarChar(255)
+  name_en   String           @db.VarChar(255)
+  icon      String?          @db.VarChar(500)
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  doctors doctor_profile[]
+}
+
+// ─── Doctor Profile ──────────────────────────────────────────────────────────
+
+model doctor_profile {
+  id                   Int      @id @unique @default(autoincrement())
+  userId               Int      @unique
+  specializationId     Int?
+  clinicName           String?  @db.VarChar(255)
+  clinicPhone          String?  @db.VarChar(20)
+  clinicAddress        String?  @db.VarChar(500)
+  governorateId        Int
+  cityId               Int
+  latitude             Float?
+  longitude            Float?
+  yearsExperience      Int      @default(0)
+  about                String?  @db.VarChar(2000)
+  education            String?  @db.VarChar(2000)
+  priceInPerson        Int      @default(0)
+  priceOnline          Int      @default(0)
+  ratingAvg            Float    @default(0)
+  ratingCount          Int      @default(0)
+  isAcceptingInPerson  Boolean  @default(true)
+  isAcceptingOnline    Boolean  @default(true)
+  slotDuration         Int      @default(30) // minutes per appointment slot
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user           User?           @relation(fields: [userId], references: [id])
+  governorate    governorate?    @relation(fields: [governorateId], references: [id])
+  city           city?           @relation(fields: [cityId], references: [id])
+  specialization Specialization? @relation(fields: [specializationId], references: [id])
+  availability   DoctorAvailability[]
+  documents      DoctorDocument[]
 
   @@index([userId])
   @@index([governorateId])
   @@index([cityId])
+  @@index([specializationId])
+  @@index([ratingAvg])
 }
+
+// ─── Doctor Weekly Availability ───────────────────────────────────────────────
+
+model DoctorAvailability {
+  id           Int        @id @unique @default(autoincrement())
+  doctorId     Int
+  dayOfWeek    DayOfWeek
+  timeStart    String     @db.VarChar(10) // "08:00"
+  timeEnd      String     @db.VarChar(10) // "17:00"
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  doctor doctor_profile @relation(fields: [doctorId], references: [id])
+
+  @@unique([doctorId, dayOfWeek])
+  @@index([doctorId])
+}
+
+// ─── Doctor Documents ─────────────────────────────────────────────────────────
+
+model DoctorDocument {
+  id         Int            @id @unique @default(autoincrement())
+  doctorId   Int
+  type       DocumentType
+  title      String         @db.VarChar(255)
+  fileUrl    String         @db.VarChar(500)
+  isVerified Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  doctor doctor_profile @relation(fields: [doctorId], references: [id])
+
+  @@index([doctorId])
+}
+
+// ─── Location ─────────────────────────────────────────────────────────────────
 
 model governorate {
   id                  Int              @id @unique @default(autoincrement())
@@ -112,8 +180,9 @@ model governorate {
   governorate_name_en String
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
-  doctorProfiles      doctor_profile[]
-  cities              city[]
+
+  doctorProfiles doctor_profile[]
+  cities         city[]
 }
 
 model city {
@@ -125,18 +194,201 @@ model city {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  governorate governorate? @relation(fields: [governorate_number], references: [id])
-
+  governorate    governorate?     @relation(fields: [governorate_number], references: [id])
   doctorProfiles doctor_profile[]
 }
 
+// ─── Booking ──────────────────────────────────────────────────────────────────
+
+model Booking {
+  id                 Int             @id @unique @default(autoincrement())
+  patientId          Int?
+  doctorId           Int?
+  status             BookingStatus   @default(PENDING)
+  type               AppointmentType @default(IN_PERSON)
+  date               String          @db.VarChar(20)
+  time               String          @db.VarChar(10)
+  duration           Int             @default(30) // minutes
+  price              Int
+  patientNotes       String?         @db.VarChar(1000)
+  doctorNotes        String?         @db.VarChar(1000)
+  cancellationReason String?         @db.VarChar(500)
+  cancelledBy        CancelledBy?
+  meetingLink        String?         @db.VarChar(500) // for online appointments
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  doctor        User?          @relation("DoctorBookings", fields: [doctorId], references: [id])
+  patient       User?          @relation("PatientBookings", fields: [patientId], references: [id])
+  orders        Order[]
+  rooms         rooms[]
+  prescriptions Prescription[]
+  review        Review?
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([date])
+}
+
+// ─── Review ───────────────────────────────────────────────────────────────────
+
+model Review {
+  id        Int      @id @unique @default(autoincrement())
+  bookingId Int      @unique
+  patientId Int?
+  doctorId  Int?
+  rating    Int // 1–5
+  comment   String?  @db.VarChar(1000)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking Booking  @relation(fields: [bookingId], references: [id])
+  patient User?    @relation("ReviewPatient", fields: [patientId], references: [id])
+  doctor  User?    @relation("ReviewDoctor", fields: [doctorId], references: [id])
+
+  @@index([doctorId])
+  @@index([patientId])
+}
+
+// ─── Prescription ─────────────────────────────────────────────────────────────
+
+model Prescription {
+  id        Int      @id @unique @default(autoincrement())
+  bookingId Int
+  doctorId  Int?
+  patientId Int?
+  diagnosis String?  @db.VarChar(1000)
+  notes     String?  @db.VarChar(2000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  booking Booking            @relation(fields: [bookingId], references: [id])
+  items   PrescriptionItem[]
+
+  @@index([bookingId])
+  @@index([doctorId])
+  @@index([patientId])
+}
+
+model PrescriptionItem {
+  id             Int          @id @unique @default(autoincrement())
+  prescriptionId Int
+  medicineName   String       @db.VarChar(255)
+  dosage         String       @db.VarChar(255)
+  frequency      String       @db.VarChar(255)
+  duration       String       @db.VarChar(255)
+  notes          String?      @db.VarChar(500)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+
+  @@index([prescriptionId])
+}
+
+// ─── Order / Payment ──────────────────────────────────────────────────────────
+
+model Order {
+  id                   Int         @id @unique @default(autoincrement())
+  patientId            Int?
+  bookingId            Int?
+  productId            Int?
+  type                 OrderType   @default(BOOKING)
+  status               OrderStatus @default(PENDING)
+  amount               Int
+  currency             String      @default("EGP") @db.VarChar(10)
+  paymentGateway       String      @default("") @db.VarChar(50)
+  paymentGatewayStatus String      @default("") @db.VarChar(50)
+  transactionId        String      @default("") @db.VarChar(255)
+  cardNumber           String      @default("") @db.VarChar(20)
+  paymentMethod        String      @default("") @db.VarChar(50)
+  paymentType          String      @default("") @db.VarChar(50)
+  hmacSignature        String      @default("") @db.VarChar(500)
+  gatewayCode          String      @default("") @db.VarChar(100)
+  gatewayMessage       String      @default("") @db.VarChar(500)
+  refundReason         String?     @db.VarChar(500)
+  paidAt               DateTime?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  patient  User?     @relation("PatientOrders", fields: [patientId], references: [id])
+  booking  Booking?  @relation(fields: [bookingId], references: [id])
+  product  Products? @relation(fields: [productId], references: [id])
+
+  @@index([patientId])
+  @@index([bookingId])
+  @@index([status])
+  @@index([transactionId])
+}
+
+// ─── Notification ─────────────────────────────────────────────────────────────
+
+model notification {
+  id        Int              @id @unique @default(autoincrement())
+  userId    Int?
+  type      NotificationType @default(GENERAL)
+  title     String           @db.VarChar(255)
+  content   String           @db.VarChar(1000)
+  link      String?          @db.VarChar(500)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+
+model rooms {
+  id          Int      @id @unique @default(autoincrement())
+  senderID    Int
+  receiverID  Int
+  bookingId   Int?
+  lastMessage String?  @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sender   User?    @relation("RoomsSender", fields: [senderID], references: [id])
+  receiver User?    @relation("RoomsReceiver", fields: [receiverID], references: [id])
+  booking  Booking? @relation(fields: [bookingId], references: [id])
+  messages dmChat[] @relation("dmChatChat")
+
+  @@index([senderID])
+  @@index([receiverID])
+}
+
+model dmChat {
+  id             Int      @id @unique @default(autoincrement())
+  chatID         Int?
+  senderID       Int?
+  seen           Boolean  @default(false)
+  message        String   @db.VarChar(5000)
+  organicMessage String   @db.VarChar(5000)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  sender User?  @relation("dmChatSender", fields: [senderID], references: [id])
+  chat   rooms? @relation("dmChatChat", fields: [chatID], references: [id])
+
+  @@index([chatID])
+  @@index([senderID])
+}
+
+// ─── Products ─────────────────────────────────────────────────────────────────
+
 model Gallery {
   id        Int       @id @unique @default(autoincrement())
-  url       String
+  url       String    @db.VarChar(500)
   productId Int?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  product   Products? @relation(fields: [productId], references: [id])
+
+  product Products? @relation(fields: [productId], references: [id])
 }
 
 model Brands {
@@ -144,129 +396,52 @@ model Brands {
   title     String     @db.VarChar(255)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  products  Products[]
+
+  products Products[]
 }
 
 model Products {
   id          Int       @id @unique @default(autoincrement())
   adminId     Int?
+  brandId     Int?
   title       String?   @db.VarChar(255)
   slug        String    @unique @db.VarChar(255)
-  description String?   @db.VarChar(255)
-  content     String?   @db.VarChar(255)
+  description String?   @db.VarChar(500)
+  content     String?   @db.VarChar(2000)
   price       Decimal?  @db.Decimal(10, 2)
-  brandId     Int?
+  stock       Int       @default(0)
   tags        String[]
+  isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  image       Gallery[]
-  brand       Brands?   @relation(fields: [brandId], references: [id])
-  user        User?     @relation(fields: [adminId], references: [id])
-  orders      Order[]
+
+  image  Gallery[]
+  brand  Brands?   @relation(fields: [brandId], references: [id])
+  user   User?     @relation(fields: [adminId], references: [id])
+  orders Order[]
 
   @@index([adminId])
   @@index([slug])
 }
 
+// ─── Blogs ────────────────────────────────────────────────────────────────────
+
 model Blogs {
   id          Int      @id @default(autoincrement())
+  authorId    Int?
   title       String   @db.VarChar(255)
   slug        String   @unique @db.VarChar(255)
-  description String
+  description String   @db.VarChar(500)
   content     String
-  image       String   @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Booking {
-  id        Int           @id @unique @default(autoincrement())
-  patientId Int?
-  doctorId  Int?
-  status    BookingStatus @default(PENDING)
-  date      String        @db.VarChar(255)
-  time      String        @db.VarChar(255)
-  price     Int
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  doctor    User?         @relation("DoctorBookings", fields: [doctorId], references: [id])
-  patient   User?         @relation("PatientBookings", fields: [patientId], references: [id])
-  orders    Order[]
-  rooms     rooms[]
-}
-
-model Order {
-  id                    Int         @id @unique @default(autoincrement())
-  patientId             Int?
-  doctorId              Int?
-  bookingId             Int?
-  productId             Int?
-  status                OrderStatus @default(PENDING)
-  idBooking             Boolean     @default(false)
-  idProduct             Boolean     @default(false)
-  date                  String      @db.VarChar(255)
-  time                  String      @db.VarChar(255)
-  price                 Int
-  currencies            String      @default("EGP")
-  Trnx_id               String      @default("")
-  card_number           String      @default("")
-  method_payment        String      @default("")
-  payment_type          String      @default("")
-  payment_getway        String      @default("")
-  payment_getway_status String      @default("")
-  payment_getway_code   String      @default("")
-  data_message          String      @default("")
-  hmac_signature        String      @default("")
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
-
-  doctor  User?     @relation("DoctorOrders", fields: [doctorId], references: [id])
-  patient User?     @relation("PatientOrders", fields: [patientId], references: [id])
-  booking Booking?  @relation(fields: [bookingId], references: [id])
-  product Products? @relation(fields: [productId], references: [id])
-  user    User?     @relation(fields: [userId], references: [id])
-  userId  Int?
-}
-
-model notification {
-  id        Int      @id @unique @default(autoincrement())
-  userId    Int?
-  status    String
-  content   String
-  link      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id])
-}
-
-model rooms {
-  id          Int      @id @unique @default(autoincrement())
-  senderID    Int
-  receiverID  Int
-  bookingId   Int?
-  lastMassage String?
+  image       String   @db.VarChar(500)
+  isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  sender     User?    @relation("RoomsSender", fields: [senderID], references: [id])
-  receiver   User?    @relation("RoomsReceiver", fields: [receiverID], references: [id])
-  booking    Booking? @relation(fields: [bookingId], references: [id])
-  dmChatChat dmChat[] @relation("dmChatChat")
+  author User? @relation(fields: [authorId], references: [id])
 }
 
-model dmChat {
-  id            Int      @id @unique @default(autoincrement())
-  chatID        Int?
-  senderID      Int?
-  seen          Boolean  @default(false)
-  message       String
-  organicMessge String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  sender User?  @relation("dmChatSender", fields: [senderID], references: [id])
-  chat   rooms? @relation("dmChatChat", fields: [chatID], references: [id])
-}
+// ─── Enums ────────────────────────────────────────────────────────────────────
 
 enum UserRole {
   ADMIN
@@ -286,9 +461,23 @@ enum UserStatus {
 
 enum BookingStatus {
   PENDING
-  PAYMENT
-  ACCEPTED
-  REJECTED
+  PAYMENT_PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  IN_PERSON
+  ONLINE
+}
+
+enum CancelledBy {
+  PATIENT
+  DOCTOR
+  SYSTEM
 }
 
 enum OrderStatus {
@@ -298,9 +487,46 @@ enum OrderStatus {
   FAILED
 }
 
+enum OrderType {
+  BOOKING
+  PRODUCT
+}
+
 enum OTPStatus {
   PENDING
   VERIFIED
   EXPIRED
   FAILED
+}
+
+enum OTPType {
+  VERIFICATION
+  PASSWORD_RESET
+  LOGIN
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum DocumentType {
+  LICENSE
+  CERTIFICATE
+  DEGREE
+  OTHER
+}
+
+enum NotificationType {
+  BOOKING
+  PAYMENT
+  MESSAGE
+  REVIEW
+  SYSTEM
+  GENERAL
 }

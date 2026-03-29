@@ -1,6 +1,5 @@
 import sharp from 'sharp'
-import { PutObjectCommand } from '@aws-sdk/client-s3'
-import { aws_client } from '../../../config/aws'
+import cloudinary from '../../../config/cloudinary'
 
 const colorArray = [
      { 1: '#E7731D' },
@@ -56,51 +55,54 @@ const checkTextOfFullNameArabicOrEnglish = async (input: any) => {
      }
 }
 
-export const avatarProfile = async (name: string, id: any) => {
-     return Promise.resolve().then(async () => {
-          const width = 450
-          const height = 450
-          const backgroundColor = getRandomColor(colorArray)
-
-          const avatar = sharp({
-               create: {
-                    width,
-                    height,
-                    channels: 4,
-                    background: backgroundColor
+function uploadBuffer(buffer: Buffer, publicId: string): Promise<string> {
+     return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+               {
+                    folder: "doc-station/user/avatars",
+                    public_id: publicId,
+                    format: "png",
+                    resource_type: "image",
+               },
+               (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result!.secure_url);
                }
-          })
+          );
+          stream.end(buffer);
+     });
+}
 
-          const checkText = await checkTextOfFullNameArabicOrEnglish(name)
-          let init = ''
+export const avatarProfile = async (name: string, id: any) => {
+     const width = 450
+     const height = 450
+     const backgroundColor = getRandomColor(colorArray)
 
-          if (checkText === 'Arabic') {
-               init = name.split(' ').map((part) => part[0].toUpperCase()).join(' ')
-          } else if (checkText === 'English') {
-               init = name.split(' ').map((part) => part[0].toUpperCase()).join('')
+     const avatar = sharp({
+          create: {
+               width,
+               height,
+               channels: 4,
+               background: backgroundColor
           }
-
-          const d = new Date();
-          const month = d.getMonth() + 1;
-          const year = d.getFullYear();
-
-          const imageBuffer = await avatar.composite([{
-               input: Buffer.from(`
-                              <svg width="${width}" height="${height}">
-                                <text x="50%" y="60%" font-size="150" font-family="Arial" text-anchor="middle" fill="#e8e8e8" alignment-baseline="middle">${init}</text>
-                              </svg>`), top: 0, left: 0
-          }]).png().toBuffer()
-
-          const uploadParams = new PutObjectCommand({
-               Bucket: process.env.AWS_S3_BUCKET as string,
-               Key: `public/user/${year}/${month}/${id}.png`,
-               Body: imageBuffer,
-               ContentType: "image/png",
-          });
-
-          await aws_client.send(uploadParams);
-          const main = `${process.env.public_CLOUD_URL}public/user/${year}/${month}/${id}.png`
-
-          return main
      })
+
+     const checkText = await checkTextOfFullNameArabicOrEnglish(name)
+     let init = ''
+
+     if (checkText === 'Arabic') {
+          init = name.split(' ').map((part) => part[0].toUpperCase()).join(' ')
+     } else if (checkText === 'English') {
+          init = name.split(' ').map((part) => part[0].toUpperCase()).join('')
+     }
+
+     const imageBuffer = await avatar.composite([{
+          input: Buffer.from(`
+                         <svg width="${width}" height="${height}">
+                           <text x="50%" y="60%" font-size="150" font-family="Arial" text-anchor="middle" fill="#e8e8e8" alignment-baseline="middle">${init}</text>
+                         </svg>`), top: 0, left: 0
+     }]).png().toBuffer()
+
+     const url = await uploadBuffer(imageBuffer, String(id));
+     return url;
 }

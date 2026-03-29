@@ -2,21 +2,18 @@ import path from "path";
 import fs from "fs-extra";
 import { readFile } from "fs/promises";
 import sharp from "sharp";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { aws_client } from "../../../config/aws";
+import cloudinary from "../../../config/cloudinary";
 
 export class imageProcess {
 
      public async albumUpload(payload: any, ImagesID: any) {
-          console.log(payload);
-
           if (!payload || !payload["multiImage"]) {
                return { error: "No images uploaded" };
           }
 
           const uploadTasks = payload["multiImage"].map(async (file: any) => {
                try {
-                    const url = await this.imageProcess(file.filename, ImagesID);
+                    const url = await this.processAndUpload(file.filename, ImagesID, "product");
                     return { image: url, path: file.path };
                } catch (error) {
                     console.log(`Error uploading image: ${error}`)
@@ -27,15 +24,15 @@ export class imageProcess {
           const results = await Promise.all(uploadTasks);
           return results;
      };
-     public async thumbnailUpload(payload: any, ImagesID: any) {
 
+     public async thumbnailUpload(payload: any, ImagesID: any) {
           if (!payload.file || !payload.file["mainImage"]) {
                return { error: "No images uploaded" };
           }
 
           const uploadTasks = payload.file["mainImage"].map(async (file: any) => {
                try {
-                    const url = await this.imageProcess(file.filename, ImagesID);
+                    const url = await this.processAndUpload(file.filename, ImagesID, "product");
                     return { image: url, path: file.path };
                } catch (error) {
                     console.log(`Error uploading image: ${error}`)
@@ -48,73 +45,51 @@ export class imageProcess {
      };
 
      public async avatarFunction(imgName: any, userID: any): Promise<string> {
-
-          const watermark = sharp(
+          const buffer = await sharp(
                await readFile(path.join(__dirname, '../../../../', `public/user/${imgName}`))
           ).resize({ width: 450, height: 450 })
                .webp({ quality: 100 })
                .toBuffer();
 
-          const date = new Date();
-          const day = date.getDate()
-          const month = date.getMonth() + 1;
-          const year = date.getFullYear();
+          const url = await this.uploadBuffer(buffer, `user/avatars/${userID}`);
 
-          const fileName = `public/user/${year}/${month}/${day}/${userID}-${parseInt(
-               Math.ceil(Math.random() * 100000001)
-                    .toPrecision(8)
-                    .toString()
-                    .replace(".", "")
-          )}.webp`;
-
-          const upload = new PutObjectCommand({
-               Bucket: process.env.AWS_S3_BUCKET as string,
-               Key: fileName,
-               Body: await watermark,
-               ContentType: "image/webp",
-          })
-
-          await aws_client.send(upload);
           fs.unlink(path.join(__dirname, '../../../../', `public/user/${imgName}`), (err) => {
-               if (err) {
-                    console.log(err);
-               }
+               if (err) console.log(err);
           });
 
-          return `${process.env.IMAGE_SERVER_API}${fileName}`;
+          return url;
      };
 
-     private async imageProcess(imgName: any, userID: any): Promise<string> {
-          const watermark = sharp(await readFile(path.join(__dirname, '../../../../', `public/product/${imgName}`))).withMetadata().webp({ quality: 100, }).toBuffer();
+     private async processAndUpload(imgName: string, id: any, folder: string): Promise<string> {
+          const localPath = path.join(__dirname, '../../../../', `public/${folder}/${imgName}`);
+          const buffer = await sharp(await readFile(localPath))
+               .withMetadata()
+               .webp({ quality: 100 })
+               .toBuffer();
 
-          const date = new Date();
-          const day = date.getDate()
-          const month = date.getMonth() + 1;
-          const year = date.getFullYear();
+          const url = await this.uploadBuffer(buffer, `${folder}/${id}`);
 
-          const fileName = `public/product/${year}/${month}/${day}/${userID}-${parseInt(
-               Math.ceil(Math.random() * 100000001)
-                    .toPrecision(8)
-                    .toString()
-                    .replace(".", "")
-          )}.webp`;
-          const uploadParams = new PutObjectCommand({
-               Bucket: process.env.AWS_S3_BUCKET as string,
-               Key: fileName,
-               Body: await watermark,
-               ContentType: "image/webp",
+          fs.unlink(localPath, (err) => {
+               if (err) console.log(err);
           });
 
-          await aws_client.send(uploadParams);
-          fs.unlink(
-               path.join(__dirname, '../../../../', `public/product/${imgName}`),
-               (err) => {
-                    if (err) {
-                         console.log(err);
-                    }
-               }
-          );
+          return url;
+     };
 
-          return `${process.env.IMAGE_SERVER_API}${fileName}`;
+     private uploadBuffer(buffer: Buffer, folder: string): Promise<string> {
+          return new Promise((resolve, reject) => {
+               const stream = cloudinary.uploader.upload_stream(
+                    {
+                         folder: `doc-station/${folder}`,
+                         format: "webp",
+                         resource_type: "image",
+                    },
+                    (error, result) => {
+                         if (error) return reject(error);
+                         resolve(result!.secure_url);
+                    }
+               );
+               stream.end(buffer);
+          });
      };
 }

@@ -1,6 +1,6 @@
 # Docker Configuration
 
-This directory contains Docker configuration files for the EGYStay project. Below is a description of all Docker-related files in the project, including those in this directory and the project root.
+This directory contains Docker configuration files for the Doc-Station project. Below is a description of all Docker-related files in the project, including those in this directory and the project root.
 
 ## Docker Directory Files
 
@@ -8,7 +8,7 @@ This directory contains Docker configuration files for the EGYStay project. Belo
 *   **Purpose**: Sets up the MongoDB database service.
 *   **Image**: `mongo:8`
 *   **Port**: `27017`
-*   **Environment Variables**: Configures root username (`lesoll`) and password.
+*   **Environment Variables**: Configures root username (`doc-station`) and password.
 *   **Volumes**: Persists data to the `mongo_data` volume.
 
 ### `docker-compose.redis.yml`

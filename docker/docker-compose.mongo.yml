@@ -6,8 +6,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: lesoll
-      MONGO_INITDB_ROOT_PASSWORD: lesoll2022lesoll2025
+      MONGO_INITDB_ROOT_USERNAME: doc-station
+      MONGO_INITDB_ROOT_PASSWORD: doc-station2026
     volumes:
       - mongo_data:/data/db
     restart: always
