@@ -42,7 +42,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
-  namespace: egystay
+  namespace: doc-station
 spec:
   selector:
     app: redis
