@@ -53,7 +53,7 @@
     "ws": "catalog:websocket"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "catalog:storage",
+    "cloudinary": "catalog:storage",
     "@mohamed-elrefai/tsconfigs": "catalog:dev",
     "@neondatabase/serverless": "catalog:database",
     "@prisma/adapter-neon": "catalog:database",

@@ -45,7 +45,7 @@ catalogs:
     "multer": "^2.0.2"
     "sharp": "^0.34.5"
     "fs-extra": "^11.3.3"
-    "@aws-sdk/client-s3": "^3.965.0"
+    "cloudinary": "^2.6.1"
     "@types/multer": "^2.0.0"
     "@types/fs-extra": "^11.0.4"
 

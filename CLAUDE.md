@@ -43,7 +43,7 @@ pnpm taze:patch       # Patch-only updates
 - **ORM:** Prisma 7.x with PostgreSQL
 - **Queue:** BullMQ + Redis
 - **Real-time:** Socket.IO
-- **Storage:** AWS S3 + Sharp (image processing)
+- **Storage:** Cloudinary + Sharp (image processing)
 - **Email:** Nodemailer via BullMQ queue jobs
 - **Auth:** JWT (access + refresh + pending tokens) + bcrypt
 - **API Docs:** Swagger UI at `/api-docs`
@@ -91,7 +91,7 @@ Controllers use `asyncHandler` wrapper (`src/utils/asyncHandler.utils.ts`). Thro
 - Environment loaded via `src/config/dotenv.conf.ts`
 - Prisma client: `src/config/prisma.ts`
 - Redis client: `src/config/redis.ts`
-- AWS S3 client: `src/config/aws.ts`
+- Cloudinary client: `src/config/cloudinary.ts`
 - Use `.env` for local, `.env.dev` for development overrides
 
 ### Key Environment Variables
@@ -102,7 +102,7 @@ REDIS_HOST              # Redis connection URL
 ACCESS_TOKEN_SECRET     # JWT access token secret
 REFRESH_TOKEN_SECRET    # JWT refresh token secret
 PENDING_TOKEN_SECRET    # JWT pending user token secret
-AWS_IAM_ACCESS_KEY / AWS_IAM_SECRET_ACCESS_KEY / AWS_S3_BUCKET / AWS_IAM_REGION
+CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET
 PAYMOB_* / APS_*        # Payment gateway credentials
 ```
 
