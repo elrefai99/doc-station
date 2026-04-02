@@ -64,7 +64,7 @@ function uploadBuffer(buffer: Buffer, publicId: string): Promise<string> {
                     format: "png",
                     resource_type: "image",
                },
-               (error, result) => {
+               (error: any, result: any) => {
                     if (error) return reject(error);
                     resolve(result!.secure_url);
                }

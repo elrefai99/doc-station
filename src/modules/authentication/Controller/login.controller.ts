@@ -2,15 +2,15 @@ import prisma from "../../../config/prisma";
 import { UserStatus } from "../../../generated/prisma";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { NextFunction, Request, Response } from "express";
-import bcrypt from "bcrypt";
-import { access_token, refresh_token } from "../../../utils/JWT/active.accounts.jwt";
+import bcrypt from "bcryptjs";
 import { loginDto } from "../DTO/index.dto";
 import { addJobToQueue } from "../../../Queue/Emails/queue.email";
+import { BasedAuthService } from "../Service/base-auth.service";
 
 export const loginController = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const { email, password } = req.body as loginDto
-
+          const baseAuth = new BasedAuthService()
           const cUser = await prisma.user.findFirst({
                where: {
                     email: email.toLowerCase(),
@@ -38,11 +38,11 @@ export const loginController = asyncHandler(
           }
           await addJobToQueue("emails", email_body)
 
-          const token = access_token(String(cUser.id))
-          const refreshToken = refresh_token(String(cUser.id))
+          const token = await baseAuth.create_token({ _id: cUser.id.toString(), type: "access" })
+          const refresh_token = await baseAuth.create_token({ _id: cUser.id.toString(), type: "refresh" })
 
-          res.cookie("refresh_token", refreshToken, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7 });
-          res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
+          res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 1000 * 60 * 60 * 2 });
+          res.cookie("refresh_token", refresh_token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 1000 * 60 * 60 * 24 * 30, });
           res.status(200).json({ code: 200, status: "Success", token })
           return
      }

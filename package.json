@@ -32,6 +32,7 @@
     "@prisma/client": "catalog:database",
     "axios": "catalog:utilities",
     "bcrypt": "catalog:auth",
+    "bcryptjs": "^3.0.3",
     "concurrently": "catalog:dev",
     "cookie-parser": "catalog:core",
     "cors": "catalog:core",
@@ -46,6 +47,7 @@
     "morgan": "catalog:core",
     "multer": "catalog:storage",
     "nodemailer": "catalog:email",
+    "paseto": "^3.1.4",
     "pg": "catalog:database",
     "sharp": "catalog:storage",
     "swagger-ui-express": "catalog:documentation",
@@ -53,7 +55,6 @@
     "ws": "catalog:websocket"
   },
   "devDependencies": {
-    "cloudinary": "catalog:storage",
     "@mohamed-elrefai/tsconfigs": "catalog:dev",
     "@neondatabase/serverless": "catalog:database",
     "@prisma/adapter-neon": "catalog:database",
@@ -83,6 +84,7 @@
     "@types/ws": "catalog:websocket",
     "bullmq": "catalog:cache",
     "class-validator": "catalog:utilities",
+    "cloudinary": "catalog:storage",
     "hviz": "catalog:documentation",
     "node-cron": "catalog:cache",
     "nodemon": "catalog:dev",

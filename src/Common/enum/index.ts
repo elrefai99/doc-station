@@ -1,24 +1,24 @@
 export enum UserRole {
-     admin = "ADMIN",
-     patient = "PATIENT",
-     doctor = "DOCTOR"
+     ADMIN = "ADMIN",
+     PATIENT = "PATIENT",
+     DOCTOR = "DOCTOR"
 }
 
 export enum UserStatus {
-     active = "ACTIVE",
-     inactive = "INACTIVE",
-     verified = "VERIFIED",
-     banned = "BANNED",
-     suspended = "SUSPENDED",
-     deleted = "DELETED",
-     archived = "ARCHIVED"
+     ACTIVE = "ACTIVE",
+     INACTIVE = "INACTIVE",
+     VERIFIED = "VERIFIED",
+     BANNED = "BANNED",
+     SUSPENDED = "SUSPENDED",
+     DELETED = "DELETED",
+     ARCHIVED = "ARCHIVED"
 }
 
 export enum OTPStatus {
-     pending = "PENDING",
-     verified = "VERIFIED",
-     expired = "EXPIRED",
-     failed = "FAILED"
+     PENDING = "PENDING",
+     VERIFIED = "VERIFIED",
+     EXPIRED = "EXPIRED",
+     FAILED = "FAILED"
 }
 
 export enum BookingStatus {
