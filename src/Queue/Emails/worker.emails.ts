@@ -3,7 +3,7 @@ import { jobProcessor } from "./job.process.emails";
 
 const worker = new Worker('emails', jobProcessor, {
      connection: {
-          url: process.env.REDIS_HOST,
+          url: process.env.REDIS_CACHE_BULLMQ,
      },
 })
 

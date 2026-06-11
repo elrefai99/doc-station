@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "dev": "concurrently \"NODE_ENV=development nodemon -L\" \"NODE_ENV=development npx ts-node ./src/Queue/worker.ts\"",
-    "dev:windows": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
+    "dev:local": "concurrently \" nodemon -L\" \"npx ts-node ./src/Queue/worker.ts\"",
     "visualize": "hviz --type prisma --schema prisma/schema.prisma --port 4000",
     "build": "tsc",
     "start": "concurrently \"node ./dist/src/app.js\" \"node ./dist/src/Queue/worker.js\"",
@@ -87,6 +87,7 @@
     "node-cron": "catalog:cache",
     "nodemon": "catalog:dev",
     "paseto": "^3.1.4",
+    "pino": "^10.3.1",
     "prisma": "catalog:database",
     "redis": "catalog:cache",
     "socket.io": "catalog:websocket",

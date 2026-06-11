@@ -24,7 +24,7 @@ export const refreshController = asyncHandler(
                const cUser = await prisma.user.findFirst({
                     where: {
                          id: Number(decoded.id),
-                         status: UserStatus.ACTIVE
+                         status: UserStatus.active,
                     }
                })
 

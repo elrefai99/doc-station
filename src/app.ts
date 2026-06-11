@@ -4,6 +4,9 @@ import appConfig from './app.config';
 import * as http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import { setupSwagger } from './swagger';
+import prisma from './config/prisma';
+import { logger } from './utils/logger';
+import { redisConfig } from './config/redis';
 
 const app = express()
 const server = http.createServer(app)
@@ -22,7 +25,38 @@ app.use(async (_req: Request, res: Response) => {
      res.status(404).send('This is not the API route you are looking for')
 })
 
-const PORT = process.env.PORT || 9999;
-server.listen(PORT as string, () => {
-     console.log("🌐 Server is running on:", process.env.NODE_ENV === "development" ? String(process.env.SITE_API_Local_URL) : String(process.env.SITE_API_URL))
-})
+const PORT: number = Number(process.env.PORT) || 9999
+async function startServer() {
+     try {
+          await Promise.all([
+               prisma.$connect().then(async () => {
+                    console.log(`✅ Success connected to ${process.env.NODE_ENV === 'development' ? 'development' : 'production'} Database`)
+                    server.listen(PORT, () => {
+                         console.log('🌐 Server is running on:', `http://${process.env.API_LINK as string}:${PORT}`)
+                    })
+               }).catch((error) => {
+                    console.log(error);
+               }).catch((err) => {
+                    logger.error({
+                         message: 'MongoDB connection failed',
+                         error: err.message,
+                         stack: err.stack,
+                    })
+                    process.exit(1)
+               }),
+               redisConfig().catch((err) => {
+                    logger.error({
+                         message: 'Redis connection failed',
+                         error: err.message,
+                         stack: err.stack,
+                    })
+                    process.exit(1)
+               }),
+          ])
+     } catch (error) {
+          console.error('❌ Failed to start server:', error)
+          process.exit(1)
+     }
+}
+
+startServer()
