@@ -5,7 +5,7 @@ import ServerError from "../../../utils/api.errors.utils";
 import bcrypt from "bcrypt";
 import { pending_token } from "../../../utils/JWT/pending.account.jwt";
 import { registerDto } from "../DTO/index.dto";
-import { avatarProfile } from "../shared/avatar.image.fun";
+import { avatarProfile } from "../utils/avatar.image.fun";
 import { UserRole, UserStatus } from "../../../generated/prisma";
 
 export const registerController = asyncHandler(
