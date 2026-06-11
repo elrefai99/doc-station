@@ -53,7 +53,6 @@
     "ws": "catalog:websocket"
   },
   "devDependencies": {
-    "cloudinary": "catalog:storage",
     "@mohamed-elrefai/tsconfigs": "catalog:dev",
     "@neondatabase/serverless": "catalog:database",
     "@prisma/adapter-neon": "catalog:database",
@@ -83,9 +82,11 @@
     "@types/ws": "catalog:websocket",
     "bullmq": "catalog:cache",
     "class-validator": "catalog:utilities",
+    "cloudinary": "catalog:storage",
     "hviz": "catalog:documentation",
     "node-cron": "catalog:cache",
     "nodemon": "catalog:dev",
+    "paseto": "^3.1.4",
     "prisma": "catalog:database",
     "redis": "catalog:cache",
     "socket.io": "catalog:websocket",

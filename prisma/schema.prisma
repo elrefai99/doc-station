@@ -18,21 +18,29 @@ enum UserType {
   PATIENT
 }
 
+enum UserStatus {
+  active
+  inactive
+  pending
+  block
+}
+
 model User {
-  id        Int      @id @unique @default(autoincrement())
-  site_id   String   @unique
+  id        Int        @id @unique @default(autoincrement())
+  site_id   String     @unique
   fName     String
   lName     String
-  username  String   @unique
+  username  String     @unique
+  status    UserStatus @default(pending)
   email     String
   password  String
   code      String
   phone     String
-  googleId  String?  @unique
-  role      Role     @default(USER)
+  googleId  String?    @unique
+  role      Role       @default(USER)
   userType  UserType
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   doctorProfiles     DoctorProfile[]
   notifications      notification[]
@@ -176,8 +184,8 @@ model Appointment {
   patientId Int
   doctorId  Int
 
-  patient User? @relation("patientAppointmet", fields: [patientId], references: [id])
-  doctor  User? @relation("doctorAppointment", fields: [doctorId], references: [id])
+  patient User?   @relation("patientAppointmet", fields: [patientId], references: [id])
+  doctor  User?   @relation("doctorAppointment", fields: [doctorId], references: [id])
   orders  Order[]
 }
 
@@ -204,9 +212,9 @@ model Order {
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
 
-  product     Products?     @relation(fields: [productId], references: [id])
-  appointment Appointment?  @relation(fields: [appointmentId], references: [id])
-  user        User?         @relation(fields: [userId], references: [id])
+  product     Products?    @relation(fields: [productId], references: [id])
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+  user        User?        @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([appointmentId])
