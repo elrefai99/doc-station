@@ -1,5 +1,5 @@
-import { PrismaClient } from '../../src/generated/prisma';
-import { governorateData } from '../../src/json/governorate.json';
+import { PrismaClient } from '../../backend/generated/prisma';
+import { governorateData } from './data/governorate.json';
 
 const prisma = new PrismaClient();
 

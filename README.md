@@ -147,7 +147,7 @@ A comprehensive healthcare platform connecting patients with orthopedic surgeons
 
 ```
 doc-station/
-├── src/
+├── backend/
 │   ├── modules/          # Feature modules (user, booking, product, etc.)
 │   ├── middleware/       # Authentication, validation, error handling
 │   ├── socket/          # WebSocket event handlers

@@ -5,7 +5,7 @@ Context: $ARGUMENTS
 
 ## How the email queue works
 
-Jobs are added via `addJobToQueue` from `src/Queue/Emails/queue.email.ts` and processed by the worker in `src/Queue/Emails/`.
+Jobs are added via `addJobToQueue` from `backend/Queue/Emails/queue.email.ts` and processed by the worker in `backend/Queue/Emails/`.
 
 ## Usage in a controller
 

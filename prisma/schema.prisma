@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../backend/generated/prisma"
 }
 
 datasource db {
@@ -10,40 +10,39 @@ datasource db {
 // ─── User ────────────────────────────────────────────────────────────────────
 
 model User {
-  id                Int             @id @unique @default(autoincrement())
-  fullname          String          @db.VarChar(255)
-  username          String          @unique @db.VarChar(255)
-  email             String          @unique @db.VarChar(255)
-  password          String          @db.VarChar(255)
-  code              String          @default("") @db.VarChar(10)
-  phone             String          @default("") @db.VarChar(20)
-  avatar            String          @default("") @db.VarChar(500)
-  bio               String          @default("") @db.VarChar(500)
-  role              UserRole        @default(PATIENT)
-  status            UserStatus      @default(INACTIVE)
-  isVerified        Boolean         @default(false)
-  updatedPasswordAt DateTime        @default(now())
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  id                Int        @id @unique @default(autoincrement())
+  fullname          String     @db.VarChar(255)
+  username          String     @unique @db.VarChar(255)
+  email             String     @unique @db.VarChar(255)
+  password          String     @db.VarChar(255)
+  code              String     @default("") @db.VarChar(10)
+  phone             String     @default("") @db.VarChar(20)
+  avatar            String     @default("") @db.VarChar(500)
+  bio               String     @default("") @db.VarChar(500)
+  role              UserRole   @default(PATIENT)
+  status            UserStatus @default(INACTIVE)
+  isVerified        Boolean    @default(false)
+  updatedPasswordAt DateTime   @default(now())
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   // Relations
-  doctorBookings    Booking[]       @relation("DoctorBookings")
-  patientBookings   Booking[]       @relation("PatientBookings")
-  otps              OTP[]
-  medicalHistories  medical_history[]
-  doctorProfile     doctor_profile?
-  patientOrders     Order[]         @relation("PatientOrders")
-  notifications     notification[]
-  roomsSent         rooms[]         @relation("RoomsSender")
-  roomsReceived     rooms[]         @relation("RoomsReceiver")
-  dmChatsSent       dmChat[]        @relation("dmChatSender")
-  products          Products[]
-  reviewsGiven      Review[]        @relation("ReviewPatient")
-  reviewsReceived   Review[]        @relation("ReviewDoctor")
-  blogs             Blogs[]
+  doctorBookings   Booking[]         @relation("DoctorBookings")
+  patientBookings  Booking[]         @relation("PatientBookings")
+  otps             OTP[]
+  medicalHistories medical_history[]
+  doctorProfile    doctor_profile?
+  patientOrders    Order[]           @relation("PatientOrders")
+  notifications    notification[]
+  roomsSent        rooms[]           @relation("RoomsSender")
+  roomsReceived    rooms[]           @relation("RoomsReceiver")
+  dmChatsSent      dmChat[]          @relation("dmChatSender")
+  products         Products[]
+  reviewsGiven     Review[]          @relation("ReviewPatient")
+  reviewsReceived  Review[]          @relation("ReviewDoctor")
+  blogs            Blogs[]
 
-  @@index([status])
-  @@index([email])
+  @@index([status, email])
   @@index([role])
   @@index([createdAt])
 }
@@ -85,13 +84,13 @@ model medical_history {
 // ─── Specialization ──────────────────────────────────────────────────────────
 
 model Specialization {
-  id        Int              @id @unique @default(autoincrement())
-  name_ar   String           @db.VarChar(255)
-  name_en   String           @db.VarChar(255)
-  icon      String?          @db.VarChar(500)
-  isActive  Boolean          @default(true)
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  name_ar   String   @db.VarChar(255)
+  name_en   String   @db.VarChar(255)
+  icon      String?  @db.VarChar(500)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   doctors doctor_profile[]
 }
@@ -99,33 +98,33 @@ model Specialization {
 // ─── Doctor Profile ──────────────────────────────────────────────────────────
 
 model doctor_profile {
-  id                   Int      @id @unique @default(autoincrement())
-  userId               Int      @unique
-  specializationId     Int?
-  clinicName           String?  @db.VarChar(255)
-  clinicPhone          String?  @db.VarChar(20)
-  clinicAddress        String?  @db.VarChar(500)
-  governorateId        Int
-  cityId               Int
-  latitude             Float?
-  longitude            Float?
-  yearsExperience      Int      @default(0)
-  about                String?  @db.VarChar(2000)
-  education            String?  @db.VarChar(2000)
-  priceInPerson        Int      @default(0)
-  priceOnline          Int      @default(0)
-  ratingAvg            Float    @default(0)
-  ratingCount          Int      @default(0)
-  isAcceptingInPerson  Boolean  @default(true)
-  isAcceptingOnline    Boolean  @default(true)
-  slotDuration         Int      @default(30) // minutes per appointment slot
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  Int      @id @unique @default(autoincrement())
+  userId              Int      @unique
+  specializationId    Int?
+  clinicName          String?  @db.VarChar(255)
+  clinicPhone         String?  @db.VarChar(20)
+  clinicAddress       String?  @db.VarChar(500)
+  governorateId       Int
+  cityId              Int
+  latitude            Float?
+  longitude           Float?
+  yearsExperience     Int      @default(0)
+  about               String?  @db.VarChar(2000)
+  education           String?  @db.VarChar(2000)
+  priceInPerson       Int      @default(0)
+  priceOnline         Int      @default(0)
+  ratingAvg           Float    @default(0)
+  ratingCount         Int      @default(0)
+  isAcceptingInPerson Boolean  @default(true)
+  isAcceptingOnline   Boolean  @default(true)
+  slotDuration        Int      @default(30) // minutes per appointment slot
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  user           User?           @relation(fields: [userId], references: [id])
-  governorate    governorate?    @relation(fields: [governorateId], references: [id])
-  city           city?           @relation(fields: [cityId], references: [id])
-  specialization Specialization? @relation(fields: [specializationId], references: [id])
+  user           User?                @relation(fields: [userId], references: [id])
+  governorate    governorate?         @relation(fields: [governorateId], references: [id])
+  city           city?                @relation(fields: [cityId], references: [id])
+  specialization Specialization?      @relation(fields: [specializationId], references: [id])
   availability   DoctorAvailability[]
   documents      DoctorDocument[]
 
@@ -139,14 +138,14 @@ model doctor_profile {
 // ─── Doctor Weekly Availability ───────────────────────────────────────────────
 
 model DoctorAvailability {
-  id           Int        @id @unique @default(autoincrement())
-  doctorId     Int
-  dayOfWeek    DayOfWeek
-  timeStart    String     @db.VarChar(10) // "08:00"
-  timeEnd      String     @db.VarChar(10) // "17:00"
-  isActive     Boolean    @default(true)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id        Int       @id @unique @default(autoincrement())
+  doctorId  Int
+  dayOfWeek DayOfWeek
+  timeStart String    @db.VarChar(10) // "08:00"
+  timeEnd   String    @db.VarChar(10) // "17:00"
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   doctor doctor_profile @relation(fields: [doctorId], references: [id])
 
@@ -157,14 +156,14 @@ model DoctorAvailability {
 // ─── Doctor Documents ─────────────────────────────────────────────────────────
 
 model DoctorDocument {
-  id         Int            @id @unique @default(autoincrement())
+  id         Int          @id @unique @default(autoincrement())
   doctorId   Int
   type       DocumentType
-  title      String         @db.VarChar(255)
-  fileUrl    String         @db.VarChar(500)
-  isVerified Boolean        @default(false)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  title      String       @db.VarChar(255)
+  fileUrl    String       @db.VarChar(500)
+  isVerified Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 
   doctor doctor_profile @relation(fields: [doctorId], references: [id])
 
@@ -174,12 +173,12 @@ model DoctorDocument {
 // ─── Location ─────────────────────────────────────────────────────────────────
 
 model governorate {
-  id                  Int              @id @unique @default(autoincrement())
+  id                  Int      @id @unique @default(autoincrement())
   number              Int
   governorate_name_ar String
   governorate_name_en String
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   doctorProfiles doctor_profile[]
   cities         city[]
@@ -244,9 +243,9 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  booking Booking  @relation(fields: [bookingId], references: [id])
-  patient User?    @relation("ReviewPatient", fields: [patientId], references: [id])
-  doctor  User?    @relation("ReviewDoctor", fields: [doctorId], references: [id])
+  booking Booking @relation(fields: [bookingId], references: [id])
+  patient User?   @relation("ReviewPatient", fields: [patientId], references: [id])
+  doctor  User?   @relation("ReviewDoctor", fields: [doctorId], references: [id])
 
   @@index([doctorId])
   @@index([patientId])
@@ -273,15 +272,15 @@ model Prescription {
 }
 
 model PrescriptionItem {
-  id             Int          @id @unique @default(autoincrement())
+  id             Int      @id @unique @default(autoincrement())
   prescriptionId Int
-  medicineName   String       @db.VarChar(255)
-  dosage         String       @db.VarChar(255)
-  frequency      String       @db.VarChar(255)
-  duration       String       @db.VarChar(255)
-  notes          String?      @db.VarChar(500)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  medicineName   String   @db.VarChar(255)
+  dosage         String   @db.VarChar(255)
+  frequency      String   @db.VarChar(255)
+  duration       String   @db.VarChar(255)
+  notes          String?  @db.VarChar(500)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   prescription Prescription @relation(fields: [prescriptionId], references: [id])
 
@@ -313,9 +312,9 @@ model Order {
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
 
-  patient  User?     @relation("PatientOrders", fields: [patientId], references: [id])
-  booking  Booking?  @relation(fields: [bookingId], references: [id])
-  product  Products? @relation(fields: [productId], references: [id])
+  patient User?     @relation("PatientOrders", fields: [patientId], references: [id])
+  booking Booking?  @relation(fields: [bookingId], references: [id])
+  product Products? @relation(fields: [productId], references: [id])
 
   @@index([patientId])
   @@index([bookingId])
@@ -382,38 +381,38 @@ model dmChat {
 // ─── Products ─────────────────────────────────────────────────────────────────
 
 model Gallery {
-  id        Int       @id @unique @default(autoincrement())
-  url       String    @db.VarChar(500)
+  id        Int      @id @unique @default(autoincrement())
+  url       String   @db.VarChar(500)
   productId Int?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   product Products? @relation(fields: [productId], references: [id])
 }
 
 model Brands {
-  id        Int        @id @unique @default(autoincrement())
-  title     String     @db.VarChar(255)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  title     String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   products Products[]
 }
 
 model Products {
-  id          Int       @id @unique @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   adminId     Int?
   brandId     Int?
-  title       String?   @db.VarChar(255)
-  slug        String    @unique @db.VarChar(255)
-  description String?   @db.VarChar(500)
-  content     String?   @db.VarChar(2000)
-  price       Decimal?  @db.Decimal(10, 2)
-  stock       Int       @default(0)
+  title       String?  @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  description String?  @db.VarChar(500)
+  content     String?  @db.VarChar(2000)
+  price       Decimal? @db.Decimal(10, 2)
+  stock       Int      @default(0)
   tags        String[]
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   image  Gallery[]
   brand  Brands?   @relation(fields: [brandId], references: [id])

@@ -50,10 +50,10 @@ pnpm taze:patch       # Patch-only updates
 
 ### Module Structure
 
-All features live under `src/modules/`. Each module follows this pattern:
+All features live under `backend/modules/`. Each module follows this pattern:
 
 ```
-src/modules/<Feature>/
+backend/modules/<Feature>/
   *.module.ts         # Express Router (route definitions + middleware)
   *.controller.ts     # Barrel re-exporting controller functions
   Controller/         # Individual route handlers
@@ -64,34 +64,34 @@ src/modules/<Feature>/
 
 Modules: `authentication`, `User`, `Booking`, `products`, `OTP`, `search`, `chat`
 
-Routes are registered in `src/app.module.ts`, all prefixed `/api/v1/`.
+Routes are registered in `backend/app.module.ts`, all prefixed `/api/v1/`.
 
 ### Authentication & Authorization
 
 - **JWT Strategy:** Three token types — `ACCESS`, `REFRESH`, `PENDING` (pending = awaiting OTP verification)
-- **Role-based middleware** in `src/middleware/authentication/`: `userMiddleware`, `patientMiddleware`, `doctorMiddleware`, `adminMiddleware`, `activeMiddleware`, `pendingMiddleware`
-- Tokens validated via `src/utils/JWT/`
+- **Role-based middleware** in `backend/middleware/authentication/`: `userMiddleware`, `patientMiddleware`, `doctorMiddleware`, `adminMiddleware`, `activeMiddleware`, `pendingMiddleware`
+- Tokens validated via `backend/utils/JWT/`
 - User roles: `ADMIN`, `PATIENT`, `DOCTOR`
 - User statuses: `ACTIVE`, `INACTIVE`, `VERIFIED`, `BANNED`, `SUSPENDED`, `DELETED`, `ARCHIVED`
 
 ### Background Jobs
 
-BullMQ worker runs as a separate process (`src/Queue/worker.ts`). Email jobs are queued from controllers and processed by `src/Queue/Emails/`. Redis is the queue backend.
+BullMQ worker runs as a separate process (`backend/Queue/worker.ts`). Email jobs are queued from controllers and processed by `backend/Queue/Emails/`. Redis is the queue backend.
 
 ### WebSocket (Socket.IO)
 
-Handlers in `src/socket/`. Supports real-time chat, typing indicators, and message read receipts. JWT authentication required for socket connections.
+Handlers in `backend/socket/`. Supports real-time chat, typing indicators, and message read receipts. JWT authentication required for socket connections.
 
 ### Error Handling Pattern
 
-Controllers use `asyncHandler` wrapper (`src/utils/asyncHandler.utils.ts`). Throw `ServerError` (`src/utils/api.errors.utils.ts`) for standardized error responses.
+Controllers use `asyncHandler` wrapper (`backend/utils/asyncHandler.utils.ts`). Throw `ServerError` (`backend/utils/api.errors.utils.ts`) for standardized error responses.
 
 ### Configuration
 
-- Environment loaded via `src/config/dotenv.conf.ts`
-- Prisma client: `src/config/prisma.ts`
-- Redis client: `src/config/redis.ts`
-- Cloudinary client: `src/config/cloudinary.ts`
+- Environment loaded via `backend/config/dotenv.conf.ts`
+- Prisma client: `backend/config/prisma.ts`
+- Redis client: `backend/config/redis.ts`
+- Cloudinary client: `backend/config/cloudinary.ts`
 - Use `.env` for local, `.env.dev` for development overrides
 
 ### Key Environment Variables

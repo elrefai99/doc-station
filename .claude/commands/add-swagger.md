@@ -4,9 +4,9 @@ Module: $ARGUMENTS
 
 ## Instructions
 
-Read the module file at `src/modules/<Module>/<module>.module.ts` to get all routes, then read each controller to understand request body, params, query, and responses.
+Read the module file at `backend/modules/<Module>/<module>.module.ts` to get all routes, then read each controller to understand request body, params, query, and responses.
 
-Write JSDoc swagger annotations in `src/modules/<Module>/<module>.swagger.ts`.
+Write JSDoc swagger annotations in `backend/modules/<Module>/<module>.swagger.ts`.
 
 ## Required format
 
@@ -73,5 +73,5 @@ Write JSDoc swagger annotations in `src/modules/<Module>/<module>.swagger.ts`.
 - Use `bearerAuth` security for any route that uses authentication middleware
 - Document all response codes that the controller actually returns
 - For multipart/form-data routes (file upload via multer), use `content: multipart/form-data`
-- Reference `src/modules/authentication/auth.swagger.ts` as the style reference
-- Import the swagger file in `src/swagger.ts` if not already imported
+- Reference `backend/modules/authentication/auth.swagger.ts` as the style reference
+- Import the swagger file in `backend/swagger.ts` if not already imported

@@ -1,5 +1,5 @@
-import { PrismaClient } from '../../src/generated/prisma';
-import { cityData } from '../../src/json/region.json';
+import { PrismaClient } from '../../backend/generated/prisma';
+import { cityData } from './data/region.json';
 
 const prisma = new PrismaClient();
 

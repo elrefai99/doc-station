@@ -5,7 +5,7 @@ Arguments: $ARGUMENTS
 
 ## Instructions
 
-Open `src/modules/<Module>/DTO/index.dto.ts` and add the new DTO class using `class-validator` decorators.
+Open `backend/modules/<Module>/DTO/index.dto.ts` and add the new DTO class using `class-validator` decorators.
 
 ## Template
 

@@ -15,7 +15,7 @@ RUN pnpm install -f
 COPY . .
 
 RUN npx prisma generate
-RUN mkdir -p dist/src/generated && cp -r src/generated/* dist/src/generated/
+RUN mkdir -p dist/backend/generated && cp -r backend/generated/* dist/backend/generated/
 
 RUN npm run build
 

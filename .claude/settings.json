@@ -12,7 +12,7 @@
                "Bash(git log*)",
                "Bash(git branch*)",
                "Bash(git stash*)",
-               "Bash(git add src/*)"
+               "Bash(git add app/backend/*)"
           ],
           "deny": [
                "Read(**/.env*)",

@@ -1,8 +1,8 @@
-import { PrismaClient } from '../../src/generated/prisma';
+import { PrismaClient } from '../../backend/generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { governorateData } from '../../src/json/governorate.json';
-import { cityData } from '../../src/json/region.json';
+import { governorateData } from './data/governorate.json';
+import { cityData } from './data/region.json';
 import * as dotenv from 'dotenv';
 
 // Load environment variables

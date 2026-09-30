@@ -4,7 +4,7 @@ Module name: $ARGUMENTS
 
 ## What to create
 
-Scaffold the following files under `src/modules/<ModuleName>/`:
+Scaffold the following files under `backend/modules/<ModuleName>/`:
 
 ### 1. `<module>.module.ts` — Express Router
 ```ts
@@ -45,17 +45,17 @@ export const myController = asyncHandler(
 Use `class-validator` decorators (`@IsString()`, `@IsNumber()`, `@IsOptional()`, etc.).
 
 ### 5. `<module>.swagger.ts` — OpenAPI JSDoc annotations
-Follow the pattern in `src/modules/authentication/auth.swagger.ts`. All routes prefixed `/api/v1/<module>`.
+Follow the pattern in `backend/modules/authentication/auth.swagger.ts`. All routes prefixed `/api/v1/<module>`.
 
 ## After scaffolding
-Register the new module in `src/app.module.ts`:
+Register the new module in `backend/app.module.ts`:
 ```ts
 import <module>Module from "./modules/<ModuleName>/<module>.module";
 app.use("/api/v1/<module>", <module>Module);
 ```
 
 ## Rules
-- Use the role-based middleware from `src/middleware/authentication/` (`userMiddleware`, `patientMiddleware`, `doctorMiddleware`, `adminMiddleware`, `activeMiddleware`, `pendingMiddleware`) as appropriate for each route.
+- Use the role-based middleware from `backend/middleware/authentication/` (`userMiddleware`, `patientMiddleware`, `doctorMiddleware`, `adminMiddleware`, `activeMiddleware`, `pendingMiddleware`) as appropriate for each route.
 - All responses follow `{ code: number, status: string, data?: any, message?: string }`.
 - Use `next(new ServerError("message", statusCode))` for errors, then `return`.
 - Import path depth depends on nesting: `Controller/` files use `../../../`, `Controller/SubFolder/` use `../../../../`.

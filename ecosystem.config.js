@@ -2,15 +2,40 @@ module.exports = {
      apps: [
           {
                name: 'Doc-Station',
-               script: './dist/src/app.js',
+               script: './dist/app/backend/app.js',
                instances: 1,
-               exec_mode: 'fork'
+               max_memory_restart: '1G',
+               exec_mode: 'fork',
+               env: {
+                    NODE_ENV: 'production',
+               },
+               error_file: '/app/logs/api-error.log',
+               out_file: '/app/logs/api-out.log',
+               merge_logs: true,
+               log_date_format: 'YYYY-MM-DD HH:mm:ss',
+               max_restarts: 10,
+               min_uptime: '10s',
+               restart_delay: 5000,
+               kill_timeout: 5000,
+               listen_timeout: 10000,
           },
           {
                name: 'Doc-Station-Worker',
-               script: './dist/src/Queue/worker.js',
+               script: './dist/app/backend/Queue/worker.js',
                instances: 1,
-               exec_mode: 'fork'
+               exec_mode: 'fork',
+               max_memory_restart: '512M',
+               env: {
+                    NODE_ENV: 'production',
+               },
+               error_file: '/app/logs/worker-error.log',
+               out_file: '/app/logs/worker-out.log',
+               merge_logs: true,
+               log_date_format: 'YYYY-MM-DD HH:mm:ss',
+               max_restarts: 10,
+               min_uptime: '10s',
+               restart_delay: 5000,
+               kill_timeout: 5000,
           }
      ]
 };

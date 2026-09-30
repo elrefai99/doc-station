@@ -3,4 +3,4 @@ node_modules
 .env.dev
 *dist
 generated
-/src/generated/prisma
+/backend/generated/prisma

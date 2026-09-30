@@ -5,9 +5,9 @@ Arguments: $ARGUMENTS
 
 ## Middleware types and where they live
 
-- **Authentication/role middleware** → `src/middleware/authentication/<name>.middleware.ts`
-- **Address/resource middleware** → `src/middleware/address/<name>.middleware.ts`
-- **Other validation middleware** → `src/middleware/<name>.middleware.ts`
+- **Authentication/role middleware** → `backend/middleware/authentication/<name>.middleware.ts`
+- **Address/resource middleware** → `backend/middleware/address/<name>.middleware.ts`
+- **Other validation middleware** → `backend/middleware/<name>.middleware.ts`
 
 ## Template for auth/role middleware
 
@@ -74,5 +74,5 @@ export const <name>Middleware = asyncHandler(
 - Always use `asyncHandler` wrapper
 - Always `return` after sending a response or calling `next()` with an error
 - Export as a named export: `export const <name>Middleware`
-- Existing middleware to reference: `src/middleware/authentication/user.middleware.ts`, `src/middleware/authentication/doctor.middleware.ts`
+- Existing middleware to reference: `backend/middleware/authentication/user.middleware.ts`, `backend/middleware/authentication/doctor.middleware.ts`
 - After creating, import and use in the relevant `*.module.ts` router file

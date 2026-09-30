@@ -6,7 +6,7 @@ Arguments: $ARGUMENTS
 ## Steps
 
 ### 1. Create the controller file
-Path: `src/modules/<Module>/Controller/<action>.controller.ts`
+Path: `backend/modules/<Module>/Controller/<action>.controller.ts`
 
 Template:
 ```ts
@@ -26,7 +26,7 @@ export const <action>Controller = asyncHandler(
 ```
 
 ### 2. Export from the barrel `<module>.controller.ts`
-Add the new export to `src/modules/<Module>/<module>.controller.ts`.
+Add the new export to `backend/modules/<Module>/<module>.controller.ts`.
 
 ### 3. Register the route in `<module>.module.ts`
 Add the route with the correct HTTP method, path, and middleware:
@@ -34,7 +34,7 @@ Add the route with the correct HTTP method, path, and middleware:
 router.<method>("<path>", <middlewares>, <action>Controller);
 ```
 
-Choose middleware from `src/middleware/authentication/` based on who can access this route:
+Choose middleware from `backend/middleware/authentication/` based on who can access this route:
 - `userMiddleware` — any authenticated user (optional auth, falls through if no token)
 - `activeMiddleware` — any active authenticated user
 - `patientMiddleware` — patients only
@@ -43,7 +43,7 @@ Choose middleware from `src/middleware/authentication/` based on who can access 
 - `pendingMiddleware` — users awaiting OTP verification
 
 ### 4. Add Swagger JSDoc to `<module>.swagger.ts`
-Document the new endpoint following the JSDoc block format in `src/modules/authentication/auth.swagger.ts`.
+Document the new endpoint following the JSDoc block format in `backend/modules/authentication/auth.swagger.ts`.
 
 ## Response format
 All responses must use: `{ code: number, status: string, data?: any, message?: string }`
