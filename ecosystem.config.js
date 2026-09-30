@@ -2,7 +2,7 @@ module.exports = {
      apps: [
           {
                name: 'Doc-Station',
-               script: './dist/app/backend/app.js',
+               script: './dist/backend/app.js',
                instances: 1,
                max_memory_restart: '1G',
                exec_mode: 'fork',
@@ -21,7 +21,7 @@ module.exports = {
           },
           {
                name: 'Doc-Station-Worker',
-               script: './dist/app/backend/Queue/worker.js',
+               script: './dist/backend/Queue/worker.js',
                instances: 1,
                exec_mode: 'fork',
                max_memory_restart: '512M',

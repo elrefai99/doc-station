@@ -23,7 +23,7 @@ const options: swaggerJsdoc.Options = {
     ],
   },
   apis: [
-    './app/backend/modules/**/*.swagger.ts',
+    './backend/modules/**/*.swagger.ts',
   ],
 };
 
